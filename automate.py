@@ -39,8 +39,8 @@ rc('axes', prop_cycle=(
 ))
 
 
-n_core = 32
-# n_core = 6
+# n_core = 32
+n_core = 6
 n_thread = n_core * 2
 backend = ' --openmp '
 
@@ -97,6 +97,56 @@ def get_files_at_given_times_from_log(files, times, logfile):
                     time_count += 1
                 file_count += 1
     return result
+
+
+class ManuscriptRFCImageGenerator(Problem):
+    """
+    Pertains to Figure 14 (a)
+    """
+    def get_name(self):
+        return 'manuscript_rfc_image_generator'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/manuscript_rfc_image_generator.py' + backend
+
+
+        # Base case info
+        self.case_info = {
+            'case_1': (dict(
+            ), 'Case 1'),
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        source = "code/manuscript_rfc_image_generator_output/"
+
+        target_dir = "manuscript/figures/manuscript_rfc_image_generator_output/"
+        os.makedirs(target_dir, exist_ok=True)
+        # print(target_dir)
+
+        file_names = os.listdir(source)
+
+        for file_name in file_names:
+            # print(file_name)
+            if file_name.endswith((".jpg", ".pdf", ".png")):
+                # print(target_dir)
+                shutil.copy(os.path.join(source, file_name), target_dir)
 
 
 class DamBreak(Problem):
@@ -400,6 +450,9 @@ class ParticleDispersion3D(Problem):
 
 if __name__ == '__main__':
     PROBLEMS = [
+        # Image generator
+        ManuscriptRFCImageGenerator,
+
         # Problem  no 1 (Dam break 2d and 3d)
         DamBreak,
         # Problem  no 2

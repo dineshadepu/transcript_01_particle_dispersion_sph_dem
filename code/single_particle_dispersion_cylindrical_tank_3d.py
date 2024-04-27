@@ -2,29 +2,14 @@
 
 Run it using:
 
-python rb_falling_in_hs_tank.py --openmp --pfreq 100 --timestep 1e-4 --alpha 0.1 --fric-coeff 0.05 --en 0.05 --N 5 --no-of-bodies 1 --fluid-length-ratio 5 --fluid-height-ratio 10 --rigid-body-rho 2000 --tf 3 --scheme combined -d rb_falling_in_hs_tank_combined_output
-
-python rb_falling_in_hs_tank.py --openmp --pfreq 100 --timestep 1e-4 --alpha 0.1 --fric-coeff 0.05 --en 0.05 --N 5 --no-of-bodies 1 --fluid-length-ratio 5 --fluid-height-ratio 10 --rigid-body-rho 2000 --tf 3 --scheme master -d rb_falling_in_hs_tank_master_output
 
 
-TODO:
-
-1. Create many particles
-2. Run it on HPC
-3. Change the speed
-4. Change the dimensions
-5. Commit SPH-DEM and current repository
-6. Validate 1 spherical particle settled in hs tank
-7. Validate 2 spherical particles settled in hs tank
-8. Complete the manuscript
-9. Different particle diameter
-10. Different density
 """
 import numpy as np
 import sys
 
 from pysph.examples import dam_break_2d as DB
-from pysph.tools.geometry import get_2d_tank, get_2d_block
+from pysph.tools.geometry import (get_2d_tank, get_2d_block, get_3d_block)
 from pysph.tools.geometry import get_3d_sphere
 import pysph.tools.geometry as G
 from pysph.base.utils import get_particle_array
@@ -48,6 +33,7 @@ from pysph_rfc_new.geometry import hydrostatic_tank_2d, create_circle_1, transla
 
 from sph_dem.rigid_fluid_coupling import (
     ParticlesFluidScheme, add_rigid_fluid_properties_to_rigid_body)
+from sph_dem.geometry import (get_cylindrical_fluid_tank_3d)
 
 from sph_dem.rigid_body.rigid_body_3d import (setup_rigid_body,
                                               set_linear_velocity,
@@ -85,11 +71,11 @@ class MakeForcesZeroOnRigidBody(Equation):
 class Problem(Application):
     def add_user_options(self, group):
         group.add_argument("--fluid-length-ratio", action="store", type=float,
-                           dest="fluid_length_ratio", default=40,
+                           dest="fluid_length_ratio", default=8,
                            help="Ratio between the fluid length and rigid body diameter")
 
         group.add_argument("--fluid-height-ratio", action="store", type=float,
-                           dest="fluid_height_ratio", default=8,
+                           dest="fluid_height_ratio", default=6,
                            help="Ratio between the fluid height and rigid body diameter")
 
         group.add_argument("--tank-length-ratio", action="store", type=float,
@@ -97,11 +83,11 @@ class Problem(Application):
                            help="Ratio between the tank length and fluid length")
 
         group.add_argument("--tank-height-ratio", action="store", type=float,
-                           dest="tank_height_ratio", default=4.,
+                           dest="tank_height_ratio", default=1.4,
                            help="Ratio between the tank height and fluid height")
 
         group.add_argument("--N", action="store", type=int, dest="N",
-                           default=6,
+                           default=4,
                            help="Number of particles in diamter of a rigid cylinder")
 
         group.add_argument("--rigid-body-rho", action="store", type=float,
@@ -136,10 +122,10 @@ class Problem(Application):
         # ======================
         # dimensions rigid body dimensions
         # All the particles are in circular or spherical shape
-        self.rigid_body_diameter = 0.11
+        self.rigid_body_diameter = 0.1
         self.rigid_body_velocity = 0.
         self.no_of_layers = self.options.no_of_layers
-        self.no_of_bodies = 3 * 6 * self.options.no_of_layers
+        self.no_of_bodies = 1
 
         # x - axis
         self.fluid_length = self.options.fluid_length_ratio * self.rigid_body_diameter
@@ -162,10 +148,10 @@ class Problem(Application):
         # y - axis
         self.stirrer_height = self.fluid_height * 0.5
         # z - axis
-        self.stirrer_depth = self.fluid_depth * 0.5
+        self.stirrer_depth = self.stirrer_length
         self.stirrer_velocity = 1.
         # time period of stirrer
-        self.T = (self.stirrer_length * 3) / self.stirrer_velocity
+        self.T = self.stirrer_length / self.stirrer_velocity
 
         # ======================
         # Dimensions ends
@@ -182,7 +168,7 @@ class Problem(Application):
         self.gx = 0.
         self.gy = -9.81
         self.gz = 0.
-        self.dim = 2
+        self.dim = 3
         # ======================
         # Physical properties and consants ends
         # ======================
@@ -227,23 +213,18 @@ class Problem(Application):
         # ==========================
 
     def create_fluid_and_tank_particle_arrays(self):
-        xf, yf, xt, yt = hydrostatic_tank_2d(self.fluid_length, self.fluid_height,
-                                             self.tank_height, self.tank_layers,
-                                             self.dx, self.dx, False)
-
-        zt = np.zeros_like(xt)
-        zf = np.zeros_like(xf)
-
-        # move fluid such that the left corner is at the origin of the
-        # co-ordinate system
-        translation = translate_system_with_left_corner_as_origin(xf, yf, zf)
-        xt[:] = xt[:] - translation[0]
-        yt[:] = yt[:] - translation[1]
-        zt[:] = zt[:] - translation[2]
-
-        # xf, yf, zf = np.array([0.02]), np.array([self.fluid_height]), np.array([0.])
+        xf, yf, zf, xt, yt, zt = get_cylindrical_fluid_tank_3d(
+            self.fluid_length,
+            self.fluid_height,
+            self.fluid_depth,
+            self.tank_length,
+            self.tank_height,
+            self.tank_layers,
+            self.dx, self.dx, False)
 
         m = self.dx**self.dim * self.fluid_rho
+        # print(self.dim, "dim")
+        # print("m", m)
         fluid = get_particle_array_fluid(name='fluid', x=xf, y=yf, z=zf, h=self.h, m=m, rho=self.fluid_rho)
         tank = get_particle_array_boundary(name='tank', x=xt, y=yt, z=zt, h=self.h, m=m, rho=self.fluid_rho)
 
@@ -253,53 +234,17 @@ class Problem(Application):
         fluid.p0_ref[0] = self.p0
         return fluid, tank
 
-    def create_six_bodies(self):
-        x1, y1 = create_circle_1(self.rigid_body_diameter, self.dx)
-        x2, y2 = create_circle_1(self.rigid_body_diameter, self.dx)
-        x3, y3 = create_circle_1(self.rigid_body_diameter, self.dx)
-
-        x2 += self.rigid_body_diameter + self.dx * 2
-        x3 += 2. * self.rigid_body_diameter + self.dx * 4
-
-        # x2 += x1 + self.rigid_body_diameter + self.dx * 2
-        # x3 += x2 + self.rigid_body_diameter + self.dx * 2
-
-        x_three_bottom = np.concatenate((x1, x2, x3))
-        y_three_bottom = np.concatenate((y1, y2, y3))
-
-        x_three_top = np.copy(x_three_bottom)
-        y_three_top = np.copy(y_three_bottom)
-        y_three_top += self.rigid_body_diameter + self.dx * 2
-
-        x = np.concatenate((x_three_bottom, x_three_top))
-        y = np.concatenate((y_three_bottom, y_three_top))
-        return x, y
-
     def create_rb_geometry_particle_array(self):
-        x_tmp, y_tmp = self.create_six_bodies()
-
-        x = x_tmp
-        y = y_tmp
-        for i in range(1, self.no_of_layers):
-            x_tmp, y_tmp = self.create_six_bodies()
-            y_tmp += max(y) - min(y_tmp) + self.rigid_body_diameter * 2.
-            x = np.concatenate((x, x_tmp))
-            y = np.concatenate((y, y_tmp))
-
-        x_middle, y_middle = np.copy(x), np.copy(y)
-        x_middle += 7 * self.rigid_body_diameter
-
-        x_right, y_right = np.copy(x_middle), np.copy(y_middle)
-        x_right += 7 * self.rigid_body_diameter
-
-        x = np.concatenate((x, x_middle, x_right))
-        y = np.concatenate((y, y_middle, y_right))
+        x, y, z = get_3d_block(dx=self.dx,
+                               length=self.rigid_body_diameter,
+                               height=self.rigid_body_diameter,
+                               depth=self.rigid_body_diameter)
 
         y[:] += self.fluid_height + self.rigid_body_diameter
         # x[:] += self.fluid_length/2. + self.rigid_body_diameter
         x[:] += self.fluid_length/2. - self.rigid_body_diameter * 4.
         x[:] += self.rigid_body_diameter * 4.
-        z = np.zeros_like(x)
+        # z = np.zeros_like(x)
 
         m = self.rigid_body_rho * self.dx**self.dim * np.ones_like(x)
         h = self.h
@@ -315,14 +260,17 @@ class Problem(Application):
                                                  nu=0.23,
                                                  rho=self.fluid_rho)
 
-        x_circle, y_circle = create_circle_1(self.rigid_body_diameter, self.dx)
+        x_block, y_block, z_block = get_3d_block(dx=self.dx,
+                                                 length=self.rigid_body_diameter,
+                                                 height=self.rigid_body_diameter,
+                                                 depth=self.rigid_body_diameter)
 
         body_id = np.array([])
         dem_id = np.array([])
-        for i in range(self.no_of_bodies):
-            body_id = np.concatenate((body_id, i * np.ones_like(x_circle,
+        for i in range(1):
+            body_id = np.concatenate((body_id, i * np.ones_like(x_block,
                                                                 dtype='int')))
-            dem_id = np.concatenate((dem_id, i * np.ones_like(x_circle,
+            dem_id = np.concatenate((dem_id, i * np.ones_like(x_block,
                                                               dtype='int')))
 
         rigid_body_combined.add_property('body_id', type='int', data=body_id)
@@ -330,12 +278,17 @@ class Problem(Application):
         return rigid_body_combined
 
     def create_stirrer(self):
-        x_stirrer, y_stirrer = get_2d_block(dx=self.dx,
-                                            length=self.stirrer_length,
-                                            height=self.stirrer_height)
+        x_stirrer, y_stirrer, z_stirrer = get_3d_block(
+            dx=self.dx,
+            length=self.stirrer_length,
+            height=self.stirrer_height,
+            depth=self.stirrer_depth)
+
         m = self.dx**self.dim * self.fluid_rho
         stirrer = get_particle_array_boundary(name='stirrer',
-                                              x=x_stirrer, y=y_stirrer,
+                                              x=x_stirrer,
+                                              y=y_stirrer,
+                                              z=z_stirrer,
                                               u=self.stirrer_velocity,
                                               h=self.h, m=m,
                                               rho=self.fluid_rho,
@@ -364,14 +317,16 @@ class Problem(Application):
         # 1. Make sure the mass is consistent for all the equations, since
         # we use 'm_b' for some equations and 'm' for fluid coupling
         rigid_body_combined = self.create_rb_geometry_particle_array()
-        rigid_body_extent = max(rigid_body_combined.x) - min(rigid_body_combined.x)
         rigid_body_combined.x[:] -= min(rigid_body_combined.x) - min(fluid.x)
         rigid_body_combined.x[:] += self.rigid_body_diameter
-        rigid_body_combined.x[:] += rigid_body_extent / 2.
         # move it to right, so that we can have a separate view
         disp_x = 0.
         rigid_body_combined.x[:] += disp_x
         rigid_body_combined.y[:] += self.rigid_body_diameter * 1.
+
+        # make the rigid body on top of the fluid
+        rigid_body_combined.y[:] -= min(rigid_body_combined.y) - max(fluid.y)
+        rigid_body_combined.y[:] += self.dx * 2.
 
         # This is # 2, (Here we create a rigid body which is compatible with
         # combined rigid body solver formulation)
@@ -483,7 +438,7 @@ class Problem(Application):
             rigid_bodies_slave=["rigid_body_combined_slave"],
             rigid_bodies_wall=["rigid_body_wall"],
             stirrer=["stirrer"],
-            dim=2,
+            dim=3,
             rho0=0.,
             h=0.,
             c0=0.,

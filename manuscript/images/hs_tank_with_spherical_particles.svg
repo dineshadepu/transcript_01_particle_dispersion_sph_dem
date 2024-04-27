@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.77234178"
-     inkscape:cx="-1486.3886"
-     inkscape:cy="954.88813"
+     inkscape:zoom="0.11313708"
+     inkscape:cx="16678.881"
+     inkscape:cy="-1613.0873"
      inkscape:window-width="1920"
      inkscape:window-height="978"
      inkscape:window-x="0"
@@ -34,14 +34,23 @@
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      showguides="true"
-     inkscape:guide-bbox="true">
-    <sodipodi:guide
-       position="-393.80785,284.08639"
-       orientation="0,-1"
-       id="guide1086" />
-  </sodipodi:namedview>
+     inkscape:guide-bbox="true" />
   <defs
      id="defs2">
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lstart"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.8) translate(12.5,0)"
+         style="fill-rule:evenodd;fill:context-stroke;stroke:context-stroke;stroke-width:1.0pt"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         id="path5526" />
+    </marker>
     <marker
        style="overflow:visible;"
        id="Arrow1Lend"
@@ -78,6 +87,48 @@
          x="-343.53857"
          y="193.88783" />
     </clipPath>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lend-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1441-8" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lstart-7"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lstart"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path5526-3" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       id="Arrow1Lend-3-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:isstock="true">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:context-stroke;stroke-width:1pt"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1441-8-3" />
+    </marker>
   </defs>
   <g
      inkscape:label="Layer 1"
@@ -682,5 +733,636 @@
        inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_explantion_schematic/real_spherical_particles.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#d45500;stroke:#d45500;stroke-width:0.316454;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect912"
+       width="10.851944"
+       height="185.85449"
+       x="-1145.2507"
+       y="506.35046"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#000080;stroke:#000080;stroke-width:1.02438;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect914"
+       width="145.13779"
+       height="145.61316"
+       x="-1133.6853"
+       y="535.44202"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#d45500;stroke:#d45500;stroke-width:0.316454;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect920"
+       width="10.851944"
+       height="185.85449"
+       x="-987.87946"
+       y="505.74863"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#d45500;stroke:#d45500;stroke-width:0.301285;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect922"
+       width="10.867113"
+       height="168.22809"
+       x="-692.21252"
+       y="-1145.2583"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"
+       transform="rotate(-90)" />
+    <rect
+       style="opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.2"
+       id="rect2037"
+       width="39.207378"
+       height="39.207378"
+       x="-1081.7576"
+       y="514.88708"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <text
+       xml:space="preserve"
+       style="font-size:8.46667px;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.2"
+       x="-1077.4618"
+       y="507.05865"
+       id="text3567"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan3565"
+         style="font-size:8.46667px;stroke-width:0.2"
+         x="-1077.4618"
+         y="507.05865">20 mm</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:8.46667px;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.2"
+       x="-1192.0255"
+       y="604.73907"
+       id="text4421"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan4419"
+         style="font-size:8.46667px;stroke-width:0.2"
+         x="-1192.0255"
+         y="604.73907">131 mm</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:8.46667px;opacity:1;fill:#ff0000;stroke:#ff0000;stroke-width:0.2"
+       x="-1071.1927"
+       y="706.25208"
+       id="text4833"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300"><tspan
+         sodipodi:role="line"
+         id="tspan4831"
+         style="font-size:8.46667px;stroke-width:0.2"
+         x="-1071.1927"
+         y="706.25208">140 mm</tspan></text>
+    <path
+       style="opacity:1;fill:#000080;stroke:#000080;stroke-width:0.9;stroke-miterlimit:4;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+       d="m -1134.0806,711.53466 146.51936,-0.6018"
+       id="path5408"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <path
+       style="opacity:1;fill:#000080;stroke:#000080;stroke-width:0.891014;stroke-miterlimit:4;stroke-dasharray:none;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend)"
+       d="m -1154.4586,679.9805 -0.6101,-141.62805"
+       id="path5794"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/rfc_02_falling_solid_in_water/schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <rect
+       style="fill:#d45500;stroke:#d45500;stroke-width:6.30771;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect329"
+       width="1304.4941"
+       height="614.27209"
+       x="1466.4534"
+       y="-149.5576" />
+    <rect
+       style="fill:#000080;stroke:#000080;stroke-width:5.01515;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect331"
+       width="1134.5936"
+       height="446.46448"
+       x="1553.1395"
+       y="-61.896202" />
+    <rect
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:5.01535;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect333"
+       width="1134.3195"
+       height="99.144241"
+       x="1553.1395"
+       y="-161.0405" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle335"
+       cx="1731.8434"
+       cy="-128.55548"
+       r="20.255596" />
+    <rect
+       style="fill:#d45500;fill-rule:evenodd;stroke:#d45500;stroke-width:0.264583"
+       id="rect359"
+       width="47.302559"
+       height="204.52768"
+       x="2087.0247"
+       y="-188.26884" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:42.8177px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.07044"
+       x="1929.1895"
+       y="-233.84807"
+       id="text4419"><tspan
+         sodipodi:role="line"
+         id="tspan4417"
+         style="stroke-width:1.07044"
+         x="1929.1895"
+         y="-233.84807">Oscillatory motion</tspan></text>
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6247"
+       cx="1880.6935"
+       cy="-128.55565"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6249"
+       cx="1804.2072"
+       cy="-128.55843"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6253"
+       cx="1731.8629"
+       cy="-199.49403"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6255"
+       cx="1880.713"
+       cy="-199.4942"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6257"
+       cx="1804.2267"
+       cy="-199.49698"
+       r="20.255596" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.95174;marker-start:url(#Arrow1Lstart);marker-end:url(#Arrow1Lend-3)"
+       d="m 1976.7994,-205.26468 c 249.0523,0 249.0523,0 249.0523,0"
+       id="path1063-3"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6261"
+       cx="1731.8661"
+       cy="-267.89966"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6263"
+       cx="1880.7162"
+       cy="-267.89981"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6265"
+       cx="1804.2299"
+       cy="-267.90259"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6267"
+       cx="1731.8856"
+       cy="-338.8382"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6269"
+       cx="1880.7357"
+       cy="-338.83838"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6271"
+       cx="1804.2494"
+       cy="-338.84116"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6273"
+       cx="1731.8654"
+       cy="-406.07526"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6275"
+       cx="1880.7155"
+       cy="-406.07544"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6277"
+       cx="1804.2291"
+       cy="-406.07822"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6279"
+       cx="2361.2632"
+       cy="-128.64418"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6281"
+       cx="2510.1133"
+       cy="-128.64435"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6283"
+       cx="2433.627"
+       cy="-128.64711"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6285"
+       cx="2361.2827"
+       cy="-199.58273"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6287"
+       cx="2510.1328"
+       cy="-199.5829"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6289"
+       cx="2433.6465"
+       cy="-199.58568"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6291"
+       cx="2361.2859"
+       cy="-267.98834"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6293"
+       cx="2510.136"
+       cy="-267.98849"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6295"
+       cx="2433.6497"
+       cy="-267.99127"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6297"
+       cx="2361.3054"
+       cy="-338.92688"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6299"
+       cx="2510.1555"
+       cy="-338.92706"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6301"
+       cx="2433.6692"
+       cy="-338.92984"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6303"
+       cx="2361.2852"
+       cy="-406.16394"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#000000;stroke:#000000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6305"
+       cx="2510.1353"
+       cy="-406.16412"
+       r="20.255596" />
+    <circle
+       style="opacity:1;fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6307"
+       cx="2433.6489"
+       cy="-406.1669"
+       r="20.255596" />
+    <rect
+       style="fill:#d45500;stroke:#d45500;stroke-width:6.30771;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect329-2"
+       width="1304.4941"
+       height="614.27209"
+       x="4000.1062"
+       y="-191.28911" />
+    <rect
+       style="fill:#000080;stroke:#000080;stroke-width:5.01515;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect331-5"
+       width="1134.5936"
+       height="446.46448"
+       x="4086.7922"
+       y="-103.62772" />
+    <rect
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:5.01535;stroke-miterlimit:4;stroke-dasharray:none"
+       id="rect333-5"
+       width="1134.3195"
+       height="99.144241"
+       x="4086.7922"
+       y="-202.772" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle335-8"
+       cx="4265.4961"
+       cy="-170.28699"
+       r="20.255596" />
+    <rect
+       style="fill:#d45500;fill-rule:evenodd;stroke:#d45500;stroke-width:0.264583"
+       id="rect359-0"
+       width="47.302559"
+       height="204.52768"
+       x="4620.6777"
+       y="-230.00035" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:38.0471px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.951179"
+       x="4471.3452"
+       y="-274.21982"
+       id="text4419-6"><tspan
+         sodipodi:role="line"
+         id="tspan4417-6"
+         style="stroke-width:0.951179"
+         x="4471.3452"
+         y="-274.21982">Oscillatory motion</tspan></text>
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6247-5"
+       cx="4414.3462"
+       cy="-170.28717"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6249-5"
+       cx="4337.8599"
+       cy="-170.28993"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6253-1"
+       cx="4265.5156"
+       cy="-241.22554"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6255-1"
+       cx="4414.3657"
+       cy="-241.22571"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6257-0"
+       cx="4337.8794"
+       cy="-241.22849"
+       r="20.255596" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.95174;marker-start:url(#Arrow1Lstart-7);marker-end:url(#Arrow1Lend-3-3)"
+       d="m 4510.4523,-246.99619 c 249.0523,0 249.0523,0 249.0523,0"
+       id="path1063-3-0"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6842"
+       cx="4234.2256"
+       cy="-401.46161"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6844"
+       cx="4443.4653"
+       cy="-401.46182"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6846"
+       cx="4335.9478"
+       cy="-401.46573"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6848"
+       cx="4234.2529"
+       cy="-501.18054"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6850"
+       cx="4443.4927"
+       cy="-501.18082"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6852"
+       cx="4335.9751"
+       cy="-501.18472"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6854"
+       cx="4234.2241"
+       cy="-595.69629"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6858"
+       cx="4335.9463"
+       cy="-595.70044"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6860"
+       cx="4264.5391"
+       cy="-315.12375"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6862"
+       cx="4413.3892"
+       cy="-315.1239"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6864"
+       cx="4336.9028"
+       cy="-315.12668"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6946"
+       cx="4875.7227"
+       cy="-175.97314"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6948"
+       cx="5024.5728"
+       cy="-175.97333"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6950"
+       cx="4948.0864"
+       cy="-175.97609"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6952"
+       cx="4875.7422"
+       cy="-246.9117"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6954"
+       cx="5024.5923"
+       cy="-246.91187"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6956"
+       cx="4948.106"
+       cy="-246.91464"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6958"
+       cx="4844.4521"
+       cy="-407.14777"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6960"
+       cx="5053.6919"
+       cy="-407.14798"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6962"
+       cx="4946.1743"
+       cy="-407.15189"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6964"
+       cx="4844.4795"
+       cy="-506.8667"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6966"
+       cx="5053.7192"
+       cy="-506.86697"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6968"
+       cx="4946.2017"
+       cy="-506.87088"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6970"
+       cx="4844.4507"
+       cy="-601.38245"
+       r="28.473475" />
+    <circle
+       style="fill:#000000;stroke:#000000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6972"
+       cx="5053.6904"
+       cy="-601.38269"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6974"
+       cx="4946.1729"
+       cy="-601.3866"
+       r="28.473475" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6976"
+       cx="4874.7656"
+       cy="-320.80991"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6978"
+       cx="5023.6157"
+       cy="-320.81006"
+       r="20.255596" />
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:1.49158;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle6980"
+       cx="4947.1294"
+       cy="-320.81284"
+       r="20.255596" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.849;marker-start:url(#Arrow1Lstart);stroke-miterlimit:4;stroke-dasharray:none"
+       d="m 2532.1952,-427.42388 c 100.7025,-63.1162 100.7025,-63.1162 100.7025,-63.1162"
+       id="path7234"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:42.874px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.07185"
+       x="2556.4929"
+       y="-504.72906"
+       id="text7238"><tspan
+         sodipodi:role="line"
+         id="tspan7236"
+         style="stroke-width:1.07185"
+         x="2556.4929"
+         y="-504.72906">Tracked particle</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1.849;stroke-miterlimit:4;stroke-dasharray:none;marker-start:url(#Arrow1Lstart)"
+       d="m 5082.3314,-629.85369 c 100.7025,-63.1162 100.7025,-63.1162 100.7025,-63.1162"
+       id="path7960"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-xdpi="300"
+       inkscape:export-ydpi="300" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:42.874px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.07185"
+       x="5106.6289"
+       y="-707.15887"
+       id="text7964"><tspan
+         sodipodi:role="line"
+         id="tspan7962"
+         style="stroke-width:1.07185"
+         x="5106.6289"
+         y="-707.15887">Tracked particle</tspan></text>
+    <circle
+       style="fill:#008000;stroke:#550000;stroke-width:2.09673;stroke-miterlimit:4;stroke-dasharray:none"
+       id="circle7966"
+       cx="4444.1196"
+       cy="-595.49475"
+       r="28.473475" />
   </g>
 </svg>

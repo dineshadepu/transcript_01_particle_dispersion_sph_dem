@@ -45,6 +45,7 @@ from pysph_dem.rigid_body.boundary_particles import (add_boundary_identification
                                 get_boundary_identification_etvf_equations)
 from pysph_rfc_new.geometry import hydrostatic_tank_2d, create_circle_1, translate_system_with_left_corner_as_origin
 # from geometry import hydrostatic_tank_2d, create_circle_1
+from sph_dem.geometry import (create_tank_2d_from_block_2d)
 
 from sph_dem.rigid_fluid_coupling import (
     ParticlesFluidScheme, add_rigid_fluid_properties_to_rigid_body)
@@ -80,6 +81,27 @@ class MakeForcesZeroOnRigidBody(Equation):
 
         frc[:] = 0
         trq[:] = 0
+
+
+def get_files_at_given_times_from_log(files, times, logfile):
+    import re
+    result = []
+    time_pattern = r"output at time\ (\d+(?:\.\d+)?)"
+    file_count, time_count = 0, 0
+    with open(logfile, 'r') as f:
+        for line in f:
+            if time_count >= len(times):
+                break
+            t = re.findall(time_pattern, line)
+            if t:
+                if float(t[0]) in times:
+                    result.append(files[file_count])
+                    time_count += 1
+                elif float(t[0]) > times[time_count]:
+                    result.append(files[file_count])
+                    time_count += 1
+                file_count += 1
+    return result
 
 
 class Problem(Application):
@@ -136,22 +158,22 @@ class Problem(Application):
         # ======================
         # dimensions rigid body dimensions
         # All the particles are in circular or spherical shape
-        self.rigid_body_diameter = 0.11
+        self.rigid_body_diameter = 1. * 1e-2
         self.rigid_body_velocity = 0.
         self.no_of_layers = self.options.no_of_layers
         self.no_of_bodies = 3 * 6 * self.options.no_of_layers
 
         # x - axis
-        self.fluid_length = self.options.fluid_length_ratio * self.rigid_body_diameter
+        self.fluid_length = 7.1 * 1e-2
         # y - axis
-        self.fluid_height = self.options.fluid_height_ratio * self.rigid_body_diameter
+        self.fluid_height = 12.1 * 1e-2
         # z - axis
         self.fluid_depth = 0.
 
         # x - axis
-        self.tank_length = self.options.tank_length_ratio * self.fluid_length
+        self.tank_length = 26 * 1e-2
         # y - axis
-        self.tank_height = self.options.tank_height_ratio * self.fluid_height
+        self.tank_height = 14. * 1e-2
         # z - axis
         self.tank_depth = 0.0
 
@@ -160,12 +182,12 @@ class Problem(Application):
         # x - axis
         self.stirrer_length = self.fluid_length * 0.1
         # y - axis
-        self.stirrer_height = self.fluid_height * 0.5
+        self.stirrer_height = self.fluid_height * 1.2
         # z - axis
         self.stirrer_depth = self.fluid_depth * 0.5
-        self.stirrer_velocity = 1.
+        self.stirrer_velocity = 0.
         # time period of stirrer
-        self.T = (self.stirrer_length * 3) / self.stirrer_velocity
+        # self.T = (self.stirrer_length * 3) / self.stirrer_velocity
 
         # ======================
         # Dimensions ends
@@ -175,9 +197,16 @@ class Problem(Application):
         # Physical properties and consants
         # ======================
         self.fluid_rho = 1000.
-        self.rigid_body_rho = self.options.rigid_body_rho
-        self.rigid_body_E = 1e9
-        self.rigid_body_nu = 0.23
+        self.rigid_body_rho = 2700
+        self.rigid_body_E = 69e9
+        self.rigid_body_nu = 0.3
+        self.wall_body_rho = 2700
+        self.wall_body_E = 3. * 1e9
+        self.wall_body_nu = 0.3
+        self.fric_coeff_body_body = 0.1
+        self.fric_coeff_body_wall = 0.1
+        self.cor_body_body = 0.9999
+        self.cor_body_wall = 0.85
 
         self.gx = 0.
         self.gy = -9.81
@@ -198,7 +227,8 @@ class Problem(Application):
         self.c0 = 10 * self.vref
         self.mach_no = self.vref / self.c0
         self.nu = 0.0
-        self.tf = 1.0
+        self.wall_time = 0.3
+        self.tf = self.wall_time + 0.6
         # self.tf = 0.56 - 0.3192
         self.p0 = self.fluid_rho*self.c0**2
         self.alpha = 0.00
@@ -213,6 +243,7 @@ class Problem(Application):
 
         self.dt = min(dt_cfl, dt_force)
         print("Computed stable dt is: ", self.dt)
+        self.output_at_times = [0., self.wall_time+0.1, self.wall_time+0.3, self.wall_time+0.5]
         # self.dt = 1e-4
         # ==========================
         # Numerical properties ends
@@ -231,6 +262,8 @@ class Problem(Application):
                                              self.tank_height, self.tank_layers,
                                              self.dx, self.dx, False)
 
+        xt, yt = create_tank_2d_from_block_2d(xf, yf, self.tank_length, self.tank_height,
+                                              self.dx, 3)
         zt = np.zeros_like(xt)
         zf = np.zeros_like(xf)
 
@@ -253,52 +286,63 @@ class Problem(Application):
         fluid.p0_ref[0] = self.p0
         return fluid, tank
 
-    def create_six_bodies(self):
+    def create_six_spherical_particles_in_a_row(self):
         x1, y1 = create_circle_1(self.rigid_body_diameter, self.dx)
         x2, y2 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x2[:] = x1[:] + self.rigid_body_diameter + self.dx
         x3, y3 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x3[:] = x2[:] + self.rigid_body_diameter + self.dx
+        x4, y4 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x4[:] = x3[:] + self.rigid_body_diameter + self.dx
+        x5, y5 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x5[:] = x4[:] + self.rigid_body_diameter + self.dx
+        x6, y6 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x6[:] = x5[:] + self.rigid_body_diameter + self.dx
 
-        x2 += self.rigid_body_diameter + self.dx * 2
-        x3 += 2. * self.rigid_body_diameter + self.dx * 4
-
-        # x2 += x1 + self.rigid_body_diameter + self.dx * 2
-        # x3 += x2 + self.rigid_body_diameter + self.dx * 2
-
-        x_three_bottom = np.concatenate((x1, x2, x3))
-        y_three_bottom = np.concatenate((y1, y2, y3))
-
-        x_three_top = np.copy(x_three_bottom)
-        y_three_top = np.copy(y_three_bottom)
-        y_three_top += self.rigid_body_diameter + self.dx * 2
-
-        x = np.concatenate((x_three_bottom, x_three_top))
-        y = np.concatenate((y_three_bottom, y_three_top))
+        x = np.concatenate((x1, x2, x3, x4, x5, x6))
+        y = np.concatenate((y1, y2, y3, y4, y5, y6))
         return x, y
 
-    def create_rb_geometry_particle_array(self):
-        x_tmp, y_tmp = self.create_six_bodies()
+    def create_five_spherical_particles_in_a_row(self):
+        x1, y1 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x2, y2 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x2[:] = x1[:] + self.rigid_body_diameter + self.dx
+        x3, y3 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x3[:] = x2[:] + self.rigid_body_diameter + self.dx
+        x4, y4 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x4[:] = x3[:] + self.rigid_body_diameter + self.dx
+        x5, y5 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x5[:] = x4[:] + self.rigid_body_diameter + self.dx
+        x6, y6 = create_circle_1(self.rigid_body_diameter, self.dx)
+        x6[:] = x5[:] + self.rigid_body_diameter + self.dx
 
-        x = x_tmp
-        y = y_tmp
-        for i in range(1, self.no_of_layers):
-            x_tmp, y_tmp = self.create_six_bodies()
-            y_tmp += max(y) - min(y_tmp) + self.rigid_body_diameter * 2.
-            x = np.concatenate((x, x_tmp))
-            y = np.concatenate((y, y_tmp))
+        x = np.concatenate((x1, x2, x3, x4, x5))
+        y = np.concatenate((y1, y2, y3, y4, y5))
 
-        x_middle, y_middle = np.copy(x), np.copy(y)
-        x_middle += 7 * self.rigid_body_diameter
+        x[:] += self.rigid_body_diameter / 2.
+        return x, y
 
-        x_right, y_right = np.copy(x_middle), np.copy(y_middle)
-        x_right += 7 * self.rigid_body_diameter
+    def create_rb_geometry_particle_array_without_gaps(self):
+        x_six_1, y_six_1 = self.create_six_spherical_particles_in_a_row()
+        x_five_1, y_five_1 = self.create_five_spherical_particles_in_a_row()
+        y_five_1[:] += self.rigid_body_diameter - 1. * self.dx
 
-        x = np.concatenate((x, x_middle, x_right))
-        y = np.concatenate((y, y_middle, y_right))
+        x_six_2, y_six_2 = self.create_six_spherical_particles_in_a_row()
+        x_five_2, y_five_2 = self.create_five_spherical_particles_in_a_row()
+        y_five_2[:] += self.rigid_body_diameter - 1. * self.dx
 
-        y[:] += self.fluid_height + self.rigid_body_diameter
-        # x[:] += self.fluid_length/2. + self.rigid_body_diameter
-        x[:] += self.fluid_length/2. - self.rigid_body_diameter * 4.
-        x[:] += self.rigid_body_diameter * 4.
+        y_six_2[:] += 2 * self.rigid_body_diameter - 2. * self.dx
+        y_five_2[:] += 2 * self.rigid_body_diameter - 2. * self.dx
+
+        x_six_3, y_six_3 = self.create_six_spherical_particles_in_a_row()
+        x_five_3, y_five_3 = self.create_five_spherical_particles_in_a_row()
+        y_five_3[:] += self.rigid_body_diameter + self.dx
+
+        y_six_3[:] += 4 * self.rigid_body_diameter - 4. * self.dx
+        y_five_3[:] += 4 * self.rigid_body_diameter - 6. * self.dx
+
+        x = np.concatenate((x_six_1, x_six_2, x_six_3, x_five_1, x_five_2, x_five_3))
+        y = np.concatenate((y_six_1, y_six_2, y_six_3, y_five_1, y_five_2, y_five_3))
         z = np.zeros_like(x)
 
         m = self.rigid_body_rho * self.dx**self.dim * np.ones_like(x)
@@ -319,7 +363,60 @@ class Problem(Application):
 
         body_id = np.array([])
         dem_id = np.array([])
-        for i in range(self.no_of_bodies):
+        total_no_of_bodies = 6 * 3 + 5 * 3
+        for i in range(total_no_of_bodies):
+            body_id = np.concatenate((body_id, i * np.ones_like(x_circle,
+                                                                dtype='int')))
+            dem_id = np.concatenate((dem_id, i * np.ones_like(x_circle,
+                                                              dtype='int')))
+
+        rigid_body_combined.add_property('body_id', type='int', data=body_id)
+        rigid_body_combined.add_property('dem_id', type='int', data=dem_id)
+        return rigid_body_combined
+
+    def create_rb_geometry_particle_array(self):
+        x_six_1, y_six_1 = self.create_six_spherical_particles_in_a_row()
+        x_five_1, y_five_1 = self.create_five_spherical_particles_in_a_row()
+        y_five_1[:] += self.rigid_body_diameter + 1. * self.dx
+
+        x_six_2, y_six_2 = self.create_six_spherical_particles_in_a_row()
+        x_five_2, y_five_2 = self.create_five_spherical_particles_in_a_row()
+        y_five_2[:] += self.rigid_body_diameter + 1. * self.dx
+
+        y_six_2[:] += 2 * self.rigid_body_diameter + 2. * self.dx
+        y_five_2[:] += 2 * self.rigid_body_diameter + 2. * self.dx
+
+        x_six_3, y_six_3 = self.create_six_spherical_particles_in_a_row()
+        x_five_3, y_five_3 = self.create_five_spherical_particles_in_a_row()
+        y_five_3[:] += self.rigid_body_diameter + self.dx
+
+        y_six_3[:] += 4 * self.rigid_body_diameter + 4. * self.dx
+        y_five_3[:] += 4 * self.rigid_body_diameter + 4. * self.dx
+
+        x = np.concatenate((x_six_1, x_six_2, x_six_3, x_five_1, x_five_2, x_five_3))
+        y = np.concatenate((y_six_1, y_six_2, y_six_3, y_five_1, y_five_2, y_five_3))
+        z = np.zeros_like(x)
+
+        m = self.rigid_body_rho * self.dx**self.dim * np.ones_like(x)
+        h = self.h
+        rad_s = self.dx / 2.
+        # This is # 1
+        rigid_body_combined = get_particle_array(name='rigid_body_combined',
+                                                 x=x,
+                                                 y=y,
+                                                 z=z,
+                                                 h=1.2 * h,
+                                                 m=m,
+                                                 E=1e9,
+                                                 nu=0.23,
+                                                 rho=self.fluid_rho)
+
+        x_circle, y_circle = create_circle_1(self.rigid_body_diameter, self.dx)
+
+        body_id = np.array([])
+        dem_id = np.array([])
+        total_no_of_bodies = 6 * 3 + 5 * 3
+        for i in range(total_no_of_bodies):
             body_id = np.concatenate((body_id, i * np.ones_like(x_circle,
                                                                 dtype='int')))
             dem_id = np.concatenate((dem_id, i * np.ones_like(x_circle,
@@ -363,15 +460,14 @@ class Problem(Application):
         # Some important notes.
         # 1. Make sure the mass is consistent for all the equations, since
         # we use 'm_b' for some equations and 'm' for fluid coupling
-        rigid_body_combined = self.create_rb_geometry_particle_array()
-        rigid_body_extent = max(rigid_body_combined.x) - min(rigid_body_combined.x)
-        rigid_body_combined.x[:] -= min(rigid_body_combined.x) - min(fluid.x)
-        rigid_body_combined.x[:] += self.rigid_body_diameter
-        rigid_body_combined.x[:] += rigid_body_extent / 2.
+        rigid_body_combined = self.create_rb_geometry_particle_array_without_gaps()
+        # rigid_body_combined.x[:] -= min(fluid.x) - min(rigid_body_combined.x)
         # move it to right, so that we can have a separate view
         disp_x = 0.
-        rigid_body_combined.x[:] += disp_x
-        rigid_body_combined.y[:] += self.rigid_body_diameter * 1.
+        # rigid_body_combined.y[:] += self.rigid_body_diameter * 1.
+        rigid_body_combined.y[:] += min(fluid.y) - min(rigid_body_combined.y[:])
+        rigid_body_combined.x[:] += min(fluid.x) - min(rigid_body_combined.x[:])
+        rigid_body_combined.x[:] += self.dx
 
         # This is # 2, (Here we create a rigid body which is compatible with
         # combined rigid body solver formulation)
@@ -388,8 +484,8 @@ class Problem(Application):
             lin_vel = np.concatenate((lin_vel, np.array([sign * 0., 0., 0.])))
             ang_vel = np.concatenate((ang_vel, np.array([0., 0., 0.])))
 
-        set_linear_velocity(rigid_body_combined, lin_vel)
-        set_angular_velocity(rigid_body_combined, ang_vel)
+        # set_linear_velocity(rigid_body_combined, lin_vel)
+        # set_angular_velocity(rigid_body_combined, ang_vel)
 
         # This is # 3,
         rigid_body_master, rigid_body_slave = get_master_and_slave_rb(
@@ -427,7 +523,7 @@ class Problem(Application):
         x[:] += disp_x
         y = np.array([max(tank.y) / 2.,
                       max(tank.y) / 2.,
-                      min(tank.y) + self.tank_layers * self.dx
+                      min(tank.y) + (self.tank_layers - 1) * self.dx
                       ])
         normal_x = np.array([1., -1., 0.])
         normal_y = np.array([0., 0., 1.])
@@ -441,7 +537,7 @@ class Problem(Application):
                                              h=self.rigid_body_diameter/2.,
                                              rho_b=self.rigid_body_rho,
                                              rad_s=self.rigid_body_diameter/2.,
-                                             E=69. * 1e9,
+                                             E=3. * 1e9,
                                              nu=0.3,
                                              G=69. * 1e5)
         dem_id = np.array([0, 0, 0])
@@ -461,12 +557,10 @@ class Problem(Application):
         # Add stirrer
         stirrer = self.create_stirrer()
         # set the position of the stirrer
-        stirrer.x[:] += ((min(fluid.x) - min(stirrer.x)) +
-                         self.fluid_length * 0.5) - self.stirrer_length * 0.5
+        stirrer.x[:] += max(fluid.x) - min(stirrer.x)
         # stirrer.x[:] -= self.rigid_body_diameter
-        stirrer.y[:] += ((min(fluid.y) - min(stirrer.y)) +
-                         self.fluid_height) - self.stirrer_height * 0.5
-        stirrer.y[:] -= self.rigid_body_diameter
+        stirrer.y[:] -= min(stirrer.y) - min(fluid.y)
+        # stirrer.y[:] -= self.rigid_body_diameter
         G.remove_overlap_particles(
             fluid, stirrer, self.dx, dim=self.dim
         )
@@ -507,7 +601,8 @@ class Problem(Application):
             nu=self.nu,
             gy=self.gy)
 
-        scheme.configure_solver(tf=tf, dt=self.dt, pfreq=200)
+        scheme.configure_solver(tf=tf, dt=self.dt, pfreq=200,
+                                output_at_times=self.output_at_times)
         print("dt = %g"%self.dt)
 
     # def create_equations(self):
@@ -528,14 +623,11 @@ class Problem(Application):
     def post_step(self, solver):
         t = solver.t
         dt = solver.dt
-        for pa in self.particles:
-            if pa.name == 'stirrer':
-                if (t // self.T) % 2 == 0:
-                    pa.u[:] = self.stirrer_velocity
-                    pa.x[:] += pa.u[:] * dt
-                else:
-                    pa.u[:] = -self.stirrer_velocity
-                    pa.x[:] += pa.u[:] * dt
+        T = self.wall_time
+        if t < T:
+            for pa in self.particles:
+                if pa.name == 'stirrer':
+                    pa.y[:] += 2. * dt
 
     def customize_output(self):
         self._mayavi_config('''
@@ -548,6 +640,7 @@ class Problem(Application):
     def post_process(self, fname):
 
         import matplotlib.pyplot as plt
+        from mpl_toolkits.axes_grid1 import make_axes_locatable
         from pysph.solver.utils import load, get_files
         from pysph.solver.utils import iter_output
         import os
@@ -555,106 +648,54 @@ class Problem(Application):
         info = self.read_info(fname)
         files = self.output_files
 
-        # initial position of the cylinder
-        fname = files[0]
-        data = load(fname)
-        rigid_body = data['arrays']['rigid_body_master']
-        y_0 = rigid_body.x[0]
+        # print(files)
+        info = self.read_info(fname)
+        output_files = self.output_files
+        output_times = self.output_at_times
+        logfile = os.path.join(
+            os.path.dirname(fname),
+            'zhang_2009_solid_fluid_mixture_verification_2d.log')
+        to_plot = get_files_at_given_times_from_log(output_files, output_times,
+                                                    logfile)
+        for i, f in enumerate(to_plot):
+            data = load(f)
+            _t = data['solver_data']['t']
+            fluid = data['arrays']['fluid']
+            tank = data['arrays']['tank']
+            rigid_body = data['arrays']['rigid_body_combined_slave']
 
-        y = []
-        v = []
-        u = []
-        t = []
-        fy = []
+            c_min = min((fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5)
+            c_max = max((fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5)
+            vmag = (fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5
+            # c_min = min(fluid.vmag)
+            # c_max = max(fluid.vmag)
 
-        for sd, rigid_body in iter_output(files, 'rigid_body_master'):
-            _t = sd['t']
-            # y.append(rigid_body.xcm[1])
-            # u.append(rigid_body.vcm[0])
-            # v.append(rigid_body.vcm[1])
-            fy.append(rigid_body.v[0])
-            t.append(_t)
-        print(fy)
-        print(t, "t is ")
-        # non dimentionalize it
-        # penetration_current = (np.asarray(y)[::1] - y_0) / self.rigid_body_diameter
-        # t_current = np.asarray(t)[::1] * (9.81 / self.rigid_body_diameter)**0.5
+            s = 5
+            fig, axs = plt.subplots(1, 1, figsize=(12, 6))
 
-        # Data from literature
-        path = os.path.abspath(__file__)
-        directory = os.path.dirname(path)
+            axs.scatter(tank.x, tank.y, s=1, c="k")
+            axs.scatter(rigid_body.x, rigid_body.y, s=1, c="r")
+            tmp = axs.scatter(fluid.x, fluid.y, s=1, c=vmag, vmin=c_min,
+                              vmax=c_max, cmap="jet")
+            # tmp = axs.scatter(fluid.x, fluid.y, s=s, c=fluid.p, vmin=c_min,
+            #                   vmax=c_max, cmap="hot")
 
-        # # load the data
-        # # We use Sun 2018 accurate and efficient water entry paper data for validation
-        # if self.rigid_body_rho == 500.:
-        #     data_y_penetration_sun_2018_exp = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_experimental_data.csv'), delimiter=',')
-        #     data_y_penetration_sun_2018_BEM = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_BEM_data.csv'), delimiter=',')
-        #     # This is 200 resolution D / dx = 200
-        #     data_y_penetration_sun_2018_SPH = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_SPH_data.csv'), delimiter=',')
-        # if self.rigid_body_rho == 1000.:
-        #     data_y_penetration_sun_2018_exp = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_experimental_data.csv'), delimiter=',')
-        #     data_y_penetration_sun_2018_BEM = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_BEM_data.csv'), delimiter=',')
-        #     # This is 200 resolution D / dx = 200
-        #     data_y_penetration_sun_2018_SPH = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_SPH_data.csv'), delimiter=',')
+            axs.set_xlabel('x')
+            axs.set_ylabel('y')
+            # axs.set_xlim([x_min, x_max])
+            # axs.set_ylim([y_min, y_max])
+            # axs.grid()
+            axs.set_aspect('equal', 'box')
 
-        # t_exp, penetration_exp = data_y_penetration_sun_2018_exp[:, 0], data_y_penetration_sun_2018_exp[:, 1]
-        # t_BEM, penetration_BEM = data_y_penetration_sun_2018_BEM[:, 0], data_y_penetration_sun_2018_BEM[:, 1]
-        # t_SPH, penetration_SPH = data_y_penetration_sun_2018_SPH[:, 0], data_y_penetration_sun_2018_SPH[:, 1]
-        # # =================
-        # # sort webplot data
-        # p = t_SPH.argsort()
-        # t_SPH = t_SPH[p]
-        # penetration_SPH = penetration_SPH[p]
-        # # t_SPH = np.delete(t_SPH, np.where(t_SPH > 1.65 and t_SPH < 1.75))
-        # # penetration_SPH = np.delete(penetration_SPH,  np.where(t_SPH > 1.65 and t_SPH < 1.75))
-        # t_SPH = np.delete(t_SPH, -4)
-        # penetration_SPH = np.delete(penetration_SPH, -4)
+            divider = make_axes_locatable(axs)
+            cax = divider.append_axes('right', size='3%', pad=0.1)
+            fig.colorbar(tmp, cax=cax, format='%.0e', orientation='vertical',
+                         shrink=0.3)
+            cax.set_ylabel('Velocity magnitude')  # cax == cb.ax
 
-        # p = t_BEM.argsort()
-        # t_BEM = t_BEM[p]
-        # penetration_BEM = penetration_BEM[p]
-        # # sort webplot data
-        # # =================
-
-        # res = os.path.join(self.output_dir, "results.npz")
-        # np.savez(res,
-        #          t_exp=t_exp,
-        #          penetration_exp=penetration_exp,
-        #          t_BEM=t_BEM,
-        #          penetration_BEM=penetration_BEM,
-        #          t_SPH=t_SPH,
-        #          penetration_SPH=penetration_SPH,
-        #          t_current=t_current,
-        #          penetration_current=-penetration_current)
-        # data = np.load(res)
-
-        # ========================
-        # Variation of y penetration
-        # ========================
-        plt.clf()
-        # plt.plot(t_exp, penetration_exp, "^", label='Experimental')
-        # plt.plot(t_SPH, penetration_SPH, "-+", label='SPH')
-        # plt.plot(t_BEM, penetration_BEM, "--", label='BEM')
-        # plt.plot(t_current, -penetration_current, "-", label='Current')
-        print("len of t is", len(t))
-        print("len of v is", len(fy))
-        plt.plot(t, fy)
-
-        plt.title('Variation in y-penetration')
-        plt.xlabel('t (g / D)^{1/2}')
-        plt.ylabel('force')
-        plt.legend()
-        fig = os.path.join(os.path.dirname(fname), "penetration_vs_t.png")
-        plt.savefig(fig, dpi=300)
-        # ========================
-        # x amplitude figure
-        # ========================
+            # save the figure
+            figname = os.path.join(os.path.dirname(fname), "time" + str(i) + ".pdf")
+            fig.savefig(figname, dpi=300)
 
 
 if __name__ == '__main__':

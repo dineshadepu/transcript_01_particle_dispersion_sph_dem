@@ -9,16 +9,9 @@ python rb_falling_in_hs_tank.py --openmp --pfreq 100 --timestep 1e-4 --alpha 0.1
 
 TODO:
 
-1. Create many particles
-2. Run it on HPC
-3. Change the speed
-4. Change the dimensions
-5. Commit SPH-DEM and current repository
-6. Validate 1 spherical particle settled in hs tank
-7. Validate 2 spherical particles settled in hs tank
-8. Complete the manuscript
-9. Different particle diameter
-10. Different density
+1. Close the tank
+2. Remove the stirrer
+3. Get the dimentions of the tank right
 """
 import numpy as np
 import sys
@@ -101,7 +94,7 @@ class Problem(Application):
                            help="Ratio between the tank height and fluid height")
 
         group.add_argument("--N", action="store", type=int, dest="N",
-                           default=6,
+                           default=12,
                            help="Number of particles in diamter of a rigid cylinder")
 
         group.add_argument("--rigid-body-rho", action="store", type=float,
@@ -136,15 +129,16 @@ class Problem(Application):
         # ======================
         # dimensions rigid body dimensions
         # All the particles are in circular or spherical shape
-        self.rigid_body_diameter = 0.11
+        self.rigid_body_diameter = 0.00125
         self.rigid_body_velocity = 0.
         self.no_of_layers = self.options.no_of_layers
         self.no_of_bodies = 3 * 6 * self.options.no_of_layers
 
         # x - axis
-        self.fluid_length = self.options.fluid_length_ratio * self.rigid_body_diameter
+        self.fluid_length = 0.02
+        self.fluid_length = 0.01
         # y - axis
-        self.fluid_height = self.options.fluid_height_ratio * self.rigid_body_diameter
+        self.fluid_height = 0.06
         # z - axis
         self.fluid_depth = 0.
 
@@ -193,12 +187,16 @@ class Problem(Application):
         self.hdx = 1.
         self.N = self.options.N
         self.dx = self.rigid_body_diameter / self.N
+        print("With N", self.N, "the dx value is", self.dx)
+        print("With delta as in hashemi 2012 paper 1 / 6000.", 1 / 6000., "the dx value is same.")
+        print("With delta as in hashemi 2012 paper 1 / 10000.", 1 / 10000., "the dx value is same.")
+        print("With delta as in hashemi 2012 paper 1 / 15000.", 1 / 15000., "the dx value is same.")
         self.h = self.hdx * self.dx
         self.vref = np.sqrt(2. * abs(self.gy) * self.fluid_height)
         self.c0 = 10 * self.vref
         self.mach_no = self.vref / self.c0
         self.nu = 0.0
-        self.tf = 1.0
+        self.tf = 0.8
         # self.tf = 0.56 - 0.3192
         self.p0 = self.fluid_rho*self.c0**2
         self.alpha = 0.00
@@ -213,7 +211,7 @@ class Problem(Application):
 
         self.dt = min(dt_cfl, dt_force)
         print("Computed stable dt is: ", self.dt)
-        # self.dt = 1e-4
+        self.dt = 1e-5
         # ==========================
         # Numerical properties ends
         # ==========================
@@ -229,7 +227,7 @@ class Problem(Application):
     def create_fluid_and_tank_particle_arrays(self):
         xf, yf, xt, yt = hydrostatic_tank_2d(self.fluid_length, self.fluid_height,
                                              self.tank_height, self.tank_layers,
-                                             self.dx, self.dx, False)
+                                             self.dx, self.dx, True)
 
         zt = np.zeros_like(xt)
         zf = np.zeros_like(xf)
@@ -276,29 +274,7 @@ class Problem(Application):
         return x, y
 
     def create_rb_geometry_particle_array(self):
-        x_tmp, y_tmp = self.create_six_bodies()
-
-        x = x_tmp
-        y = y_tmp
-        for i in range(1, self.no_of_layers):
-            x_tmp, y_tmp = self.create_six_bodies()
-            y_tmp += max(y) - min(y_tmp) + self.rigid_body_diameter * 2.
-            x = np.concatenate((x, x_tmp))
-            y = np.concatenate((y, y_tmp))
-
-        x_middle, y_middle = np.copy(x), np.copy(y)
-        x_middle += 7 * self.rigid_body_diameter
-
-        x_right, y_right = np.copy(x_middle), np.copy(y_middle)
-        x_right += 7 * self.rigid_body_diameter
-
-        x = np.concatenate((x, x_middle, x_right))
-        y = np.concatenate((y, y_middle, y_right))
-
-        y[:] += self.fluid_height + self.rigid_body_diameter
-        # x[:] += self.fluid_length/2. + self.rigid_body_diameter
-        x[:] += self.fluid_length/2. - self.rigid_body_diameter * 4.
-        x[:] += self.rigid_body_diameter * 4.
+        x, y = create_circle_1(self.rigid_body_diameter, self.dx)
         z = np.zeros_like(x)
 
         m = self.rigid_body_rho * self.dx**self.dim * np.ones_like(x)
@@ -319,7 +295,7 @@ class Problem(Application):
 
         body_id = np.array([])
         dem_id = np.array([])
-        for i in range(self.no_of_bodies):
+        for i in range(1):
             body_id = np.concatenate((body_id, i * np.ones_like(x_circle,
                                                                 dtype='int')))
             dem_id = np.concatenate((dem_id, i * np.ones_like(x_circle,
@@ -383,7 +359,7 @@ class Problem(Application):
         lin_vel = np.array([])
         ang_vel = np.array([])
         sign = -1
-        for i in range(self.no_of_bodies):
+        for i in range(1):
             sign *= -1
             lin_vel = np.concatenate((lin_vel, np.array([sign * 0., 0., 0.])))
             ang_vel = np.concatenate((ang_vel, np.array([0., 0., 0.])))
@@ -398,7 +374,7 @@ class Problem(Application):
 
         # This is # 4
         rigid_body_master.rad_s[:] = self.rigid_body_diameter / 2.
-        rigid_body_master.h[:] = self.rigid_body_diameter * 2.
+        rigid_body_master.h[:] = self.h
         add_contact_properties_body_master(rigid_body_master, 6, 3)
 
         # This is # 5
@@ -464,25 +440,23 @@ class Problem(Application):
         stirrer.x[:] += ((min(fluid.x) - min(stirrer.x)) +
                          self.fluid_length * 0.5) - self.stirrer_length * 0.5
         # stirrer.x[:] -= self.rigid_body_diameter
-        stirrer.y[:] += ((min(fluid.y) - min(stirrer.y)) +
-                         self.fluid_height) - self.stirrer_height * 0.5
-        stirrer.y[:] -= self.rigid_body_diameter
+        stirrer.y[:] += max(fluid.y) - min(stirrer.y) + self.rigid_body_diameter * 10
         G.remove_overlap_particles(
             fluid, stirrer, self.dx, dim=self.dim
         )
 
         return [fluid, tank, rigid_body_master, rigid_body_slave,
-                rigid_body_wall, stirrer]
+                rigid_body_wall]
 
     def create_scheme(self):
         master = ParticlesFluidScheme(
             fluids=['fluid'],
-            boundaries=['tank', "stirrer"],
+            boundaries=['tank'],
             # rigid_bodies_combined=[],
             rigid_bodies_master=["rigid_body_combined_master"],
             rigid_bodies_slave=["rigid_body_combined_slave"],
             rigid_bodies_wall=["rigid_body_wall"],
-            stirrer=["stirrer"],
+            stirrer=[],
             dim=2,
             rho0=0.,
             h=0.,

@@ -39,8 +39,8 @@ rc('axes', prop_cycle=(
 ))
 
 
-# n_core = 32
-n_core = 6
+# n_core = 6
+n_core = 16
 n_thread = n_core * 2
 backend = ' --openmp '
 
@@ -448,6 +448,275 @@ class ParticleDispersion3D(Problem):
                     shutil.copy(os.path.join(source, file_name), target_dir)
 
 
+class Wu2014FallingSolid3D(Problem):
+    """We will allow a circular particle to settle in a tank with different
+    viscosity coefficients and check the deviatioinn in the settling time
+    """
+    def get_name(self):
+        return 'wu_2014_falling_solid_3d'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/wu_2014_falling_solid_3d.py' + backend
+
+        # kinetic viscosity
+        # Base case info
+        self.case_info = {
+            'N_8': (dict(
+                N=8,
+                nu=1e-6,
+                ), 'N=8'),
+
+            'N_10': (dict(
+                N=10,
+                nu=1e-6,
+                ), 'N=10'),
+
+            'N_12': (dict(
+                N=12,
+                nu=1e-6,
+                ), 'N=12'),
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+        self.plot_displacement()
+
+    def plot_displacement(self):
+        data = {}
+        for name in self.case_info:
+            data[name] = np.load(self.input_path(name, 'results.npz'))
+
+        rand_case = (list(data.keys())[0])
+
+        t_exp = data[rand_case]['t_exp']
+        z_position_exp = data[rand_case]['z_position_exp']
+
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+        plt.plot(t_exp, z_position_exp, "o", label='Experiment')
+        for name in self.case_info:
+            t_current = data[name]['t_current']
+            z_current = data[name]['z_position_current']
+
+            plt.plot(t_current, z_current, label=self.case_info[name][1])
+
+        plt.xlabel('time')
+        plt.ylabel('z - amplitude')
+        plt.legend()
+        # plt.tight_layout(pad=0)
+        plt.savefig(self.output_path('z_vs_t.pdf'))
+        plt.clf()
+        plt.close()
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        for name in self.case_info:
+            source = self.input_path(name)
+
+            target_dir = "manuscript/figures/" + source[8:] + "/"
+            os.makedirs(target_dir)
+            # print(target_dir)
+
+            file_names = os.listdir(source)
+
+            for file_name in file_names:
+                # print(file_name)
+                if file_name.endswith((".jpg", ".pdf", ".png")):
+                    # print(target_dir)
+                    shutil.copy(os.path.join(source, file_name), target_dir)
+
+
+class Zhang2009SolidFluidMixtureVerification2d(Problem):
+    """
+
+    SPH-VCPM-DEM paper has all the details of the DEM model
+    https://www.sciencedirect.com/science/article/pii/S0889974621001523#sec3
+    """
+    def get_name(self):
+        return 'zhang_2009_solid_fluid_mixture_verification_2d'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/zhang_2009_solid_fluid_mixture_verification_2d.py' + backend
+
+        # kinetic viscosity
+        # Base case info
+        self.case_info = {
+            'N_8': (dict(
+                N=8,
+                fric_coeff=0.1,
+                fric_coeff_wall=0.1,
+                en=0.999,
+                en_wall=0.85,
+                ), 'N=8'),
+
+            'N_10': (dict(
+                N=10,
+                fric_coeff=0.1,
+                fric_coeff_wall=0.1,
+                en=0.999,
+                en_wall=0.85,
+                ), 'N=10'),
+
+            'N_12': (dict(
+                N=12,
+                fric_coeff=0.1,
+                fric_coeff_wall=0.1,
+                en=0.999,
+                en_wall=0.85,
+                ), 'N=12'),
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        for name in self.case_info:
+            source = self.input_path(name)
+
+            target_dir = "manuscript/figures/" + source[8:] + "/"
+            os.makedirs(target_dir)
+            # print(target_dir)
+
+            file_names = os.listdir(source)
+
+            for file_name in file_names:
+                # print(file_name)
+                if file_name.endswith((".jpg", ".pdf", ".png")):
+                    # print(target_dir)
+                    shutil.copy(os.path.join(source, file_name), target_dir)
+
+
+class RFCTesting1(Problem):
+    """We will allow a circular particle to settle in a tank with different
+    viscosity coefficients and check the deviatioinn in the settling time
+    """
+    def get_name(self):
+        return 'rfc_testing_1'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/wu_2014_falling_solid_2d.py' + backend
+
+        # kinetic viscosity
+        # Base case info
+        self.case_info = {
+            'nu_0': (dict(
+                nu=0.,
+                ), 'nu=0.'),
+
+            'nu_6': (dict(
+                nu=1e-6,
+                ), 'nu=1e-6'),
+
+            'nu_5': (dict(
+                nu=1e-5,
+                ), 'nu=1e-5'),
+
+            'nu_4': (dict(
+                nu=1e-4,
+                ), 'nu=1e-4'),
+
+            'nu_3': (dict(
+                nu=1e-3,
+                ), 'nu=1e-3')
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+        self.plot_displacement()
+
+    def plot_displacement(self):
+        data = {}
+        for name in self.case_info:
+            data[name] = np.load(self.input_path(name, 'results.npz'))
+
+        rand_case = (list(data.keys())[0])
+
+        t_exp = data[rand_case]['t_exp']
+        y_position_exp = data[rand_case]['y_position_exp']
+
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+        plt.plot(t_exp, y_position_exp, "o", label='Experiment')
+        for name in self.case_info:
+            t_current = data[name]['t_current']
+            y_current = data[name]['y_position_current']
+
+            plt.plot(t_current, y_current, label=self.case_info[name][1])
+
+        plt.xlabel('time')
+        plt.ylabel('y - amplitude')
+        plt.legend()
+        # plt.tight_layout(pad=0)
+        plt.savefig(self.output_path('y_vs_t.pdf'))
+        plt.clf()
+        plt.close()
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        for name in self.case_info:
+            source = self.input_path(name)
+
+            target_dir = "manuscript/figures/" + source[8:] + "/"
+            os.makedirs(target_dir)
+            # print(target_dir)
+
+            file_names = os.listdir(source)
+
+            for file_name in file_names:
+                # print(file_name)
+                if file_name.endswith((".jpg", ".pdf", ".png")):
+                    # print(target_dir)
+                    shutil.copy(os.path.join(source, file_name), target_dir)
+
+
 if __name__ == '__main__':
     PROBLEMS = [
         # Image generator
@@ -460,11 +729,17 @@ if __name__ == '__main__':
         SphericalBodiesSettlingInTankDEM3D,
         # Problem  no 3
         ParticleDispersion2D,
-        ParticleDispersion3D
-        # # Problem  no 4
-        # Hashemi2012NeutrallyBuoyantCircularCylinderInShearFlow,
-        # # Problem  no 5
-        # Ng2021TwoCylindersInShearFlow,
+        ParticleDispersion3D,
+        # Problem  no 4
+        # Wu 2014 falling solid in water 3d,
+        Wu2014FallingSolid3D,
+
+        # Problem  no 5
+        # Zhang 2009 solid-fluid mixture verification
+        Zhang2009SolidFluidMixtureVerification2d,
+
+        # RFC testing no 1
+        RFCTesting1
         ]
 
     automator = Automator(

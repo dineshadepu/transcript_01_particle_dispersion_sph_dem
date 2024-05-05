@@ -56,6 +56,7 @@ from sph_dem.rigid_body.rigid_body_3d import (setup_rigid_body,
                                               add_contact_properties_body_master)
 
 from pysph_dem.dem_simple import (setup_wall_dem)
+from zhang_2009_solid_fluid_mixture_verification_2d import (get_files_at_given_times_from_log)
 
 
 def check_time_make_zero(t, dt):
@@ -85,11 +86,11 @@ class MakeForcesZeroOnRigidBody(Equation):
 class Problem(Application):
     def add_user_options(self, group):
         group.add_argument("--fluid-length-ratio", action="store", type=float,
-                           dest="fluid_length_ratio", default=20,
+                           dest="fluid_length_ratio", default=30,
                            help="Ratio between the fluid length and rigid body diameter")
 
         group.add_argument("--fluid-height-ratio", action="store", type=float,
-                           dest="fluid_height_ratio", default=8,
+                           dest="fluid_height_ratio", default=15,
                            help="Ratio between the fluid height and rigid body diameter")
 
         group.add_argument("--tank-length-ratio", action="store", type=float,
@@ -105,7 +106,7 @@ class Problem(Application):
                            help="Number of particles in diamter of a rigid cylinder")
 
         group.add_argument("--rigid-body-rho", action="store", type=float,
-                           dest="rigid_body_rho", default=1500,
+                           dest="rigid_body_rho", default=1050,
                            help="Density of rigid cylinder")
 
         group.add_argument("--rigid-body-diameter", action="store", type=float,
@@ -113,8 +114,12 @@ class Problem(Application):
                            help="Diameter of each particle")
 
         group.add_argument("--stirrer-velocity", action="store", type=float,
-                           dest="stirrer_velocity", default=3,
+                           dest="stirrer_velocity", default=1,
                            help="Stirrer velocity")
+
+        group.add_argument("--radius-ratio", action="store", type=float,
+                           dest="radius_ratio", default=1.0,
+                           help="Diameter of each particle")
 
         add_bool_argument(
             group,
@@ -141,9 +146,10 @@ class Problem(Application):
         # dimensions rigid body dimensions
         # All the particles are in circular or spherical shape
         self.rigid_body_diameter = 0.11
+        self.radius_ratio = self.options.radius_ratio
         self.rigid_body_velocity = 0.
         self.no_of_layers = self.options.no_of_layers
-        self.no_of_bodies = 18 * 2
+        self.no_of_bodies = 18 * 3
 
         # x - axis
         self.fluid_length = self.options.fluid_length_ratio * self.rigid_body_diameter
@@ -171,7 +177,8 @@ class Problem(Application):
         # stirrer velocity
         self.stirrer_velocity = self.options.stirrer_velocity
         # time period of stirrer
-        self.T = (self.stirrer_length * 3) / self.stirrer_velocity
+        self.T = (self.fluid_length - 6. * self.stirrer_length) / self.stirrer_velocity
+        # self.T = (self.stirrer_length) / self.stirrer_velocity
 
         # ======================
         # Dimensions ends
@@ -204,7 +211,8 @@ class Problem(Application):
         self.c0 = 10 * self.vref
         self.mach_no = self.vref / self.c0
         self.nu = 0.0
-        self.tf = 1.0
+        self.wall_time = 1.0
+        self.tf = self.wall_time + 10
         # self.tf = 0.56 - 0.3192
         self.p0 = self.fluid_rho*self.c0**2
         self.alpha = 0.00
@@ -219,6 +227,11 @@ class Problem(Application):
 
         self.dt = min(dt_cfl, dt_force)
         print("Computed stable dt is: ", self.dt)
+        self.total_steps = self.tf / self.dt
+        print("Total steps in this simulation are", self.total_steps)
+        self.pfreq = int(self.total_steps / 300)
+        print("Pfreq is", self.pfreq)
+        self.output_at_times = [0., self.wall_time+3.0, self.wall_time+6.0, self.wall_time+9.9]
         # self.dt = 1e-4
         # ==========================
         # Numerical properties ends
@@ -296,26 +309,38 @@ class Problem(Application):
 
     def create_rb_geometry_particle_array(self):
         x_1, y_1, body_id_1, dem_id_1 = self.create_nine_bodies(self.rigid_body_diameter)
+        rad_1 = np.ones(9) * self.rigid_body_diameter / 2.
 
-        x_2, y_2, body_id_2, dem_id_2 = self.create_nine_bodies(self.rigid_body_diameter * 1.2)
+        x_2, y_2, body_id_2, dem_id_2 = self.create_nine_bodies(self.rigid_body_diameter * self.radius_ratio)
         x_2 += self.dx * -1.
         y_2 += max(y_1) - min(y_2) + self.rigid_body_diameter * 1.
+        rad_2 = np.ones(9) * (self.rigid_body_diameter * self.radius_ratio) / 2.
         body_id_2 += 9
         dem_id_2 += 9
 
         x = np.concatenate((x_1, x_2))
         y = np.concatenate((y_1, y_2))
+        rad = np.concatenate((rad_1, rad_2))
         body_id = np.concatenate((body_id_1, body_id_2))
         dem_id = np.concatenate((dem_id_1, dem_id_2))
 
         x_right, y_right = np.copy(x), np.copy(y)
         x_right += 7 * self.rigid_body_diameter
+        rad_right = np.concatenate((rad_1, rad_2))
         body_id_right = np.copy((body_id)) + 18
         dem_id_right = np.copy((dem_id)) + 18
-        x = np.concatenate((x, x_right))
-        y = np.concatenate((y, y_right))
-        body_id = np.concatenate((body_id, body_id_right))
-        dem_id = np.concatenate((dem_id, dem_id_right))
+
+        x_right_2, y_right_2 = np.copy(x_right), np.copy(y_right)
+        x_right_2 += 7 * self.rigid_body_diameter
+        rad_right_2 = np.concatenate((rad_1, rad_2))
+        body_id_right_2 = np.copy((body_id_right)) + 18
+        dem_id_right_2 = np.copy((dem_id_right)) + 18
+
+        x = np.concatenate((x, x_right, x_right_2))
+        y = np.concatenate((y, y_right, y_right_2))
+        self.rad_master = np.concatenate((rad, rad_right, rad_right_2))
+        body_id = np.concatenate((body_id, body_id_right, body_id_right_2))
+        dem_id = np.concatenate((dem_id, dem_id_right, dem_id_right_2))
         # import matplotlib.pyplot as plt
         # plt.scatter(x, y)
         # plt.show()
@@ -353,7 +378,7 @@ class Problem(Application):
         m = self.dx**self.dim * self.fluid_rho
         stirrer = get_particle_array_boundary(name='stirrer',
                                               x=x_stirrer, y=y_stirrer,
-                                              u=self.stirrer_velocity,
+                                              u=0.,
                                               h=self.h, m=m,
                                               rho=self.fluid_rho,
                                               E=1e9,
@@ -401,8 +426,12 @@ class Problem(Application):
         sign = -1
         for i in range(self.no_of_bodies):
             sign *= -1
-            lin_vel = np.concatenate((lin_vel, np.array([sign * 0., 0., 0.])))
-            ang_vel = np.concatenate((ang_vel, np.array([0., 0., 0.])))
+            if i == 6:
+                lin_vel = np.concatenate((lin_vel, np.array([sign * 0., 0., 0.])))
+                ang_vel = np.concatenate((ang_vel, np.array([0., 0., 0.])))
+            else:
+                lin_vel = np.concatenate((lin_vel, np.array([sign * 0., 0., 0.])))
+                ang_vel = np.concatenate((ang_vel, np.array([0., 0., 0.])))
 
         set_linear_velocity(rigid_body_combined, lin_vel)
         set_angular_velocity(rigid_body_combined, ang_vel)
@@ -413,8 +442,8 @@ class Problem(Application):
         )
 
         # This is # 4
-        rigid_body_master.rad_s[:] = self.rigid_body_diameter / 2.
-        rigid_body_master.h[:] = self.rigid_body_diameter * 2.
+        rigid_body_master.rad_s[:] = self.rad_master[:]
+        rigid_body_master.h[:] = self.rigid_body_diameter * 0.5
         add_contact_properties_body_master(rigid_body_master, 6, 3)
 
         # This is # 5
@@ -477,8 +506,7 @@ class Problem(Application):
         # Add stirrer
         stirrer = self.create_stirrer()
         # set the position of the stirrer
-        stirrer.x[:] += ((min(fluid.x) - min(stirrer.x)) +
-                         self.fluid_length * 0.5) - self.stirrer_length * 0.5
+        stirrer.x[:] += min(fluid.x) - min(stirrer.x) + self.stirrer_length * 3
         # stirrer.x[:] -= self.rigid_body_diameter
         stirrer.y[:] += ((min(fluid.y) - min(stirrer.y)) +
                          self.fluid_height) - self.stirrer_height * 0.5
@@ -523,7 +551,8 @@ class Problem(Application):
             nu=self.nu,
             gy=self.gy)
 
-        scheme.configure_solver(tf=tf, dt=self.dt, pfreq=200)
+        scheme.configure_solver(tf=tf, dt=self.dt, pfreq=self.pfreq,
+                                output_at_times=self.output_at_times)
         print("dt = %g"%self.dt)
 
     # def create_equations(self):
@@ -546,12 +575,15 @@ class Problem(Application):
         dt = solver.dt
         for pa in self.particles:
             if pa.name == 'stirrer':
-                if (t // self.T) % 2 == 0:
-                    pa.u[:] = self.stirrer_velocity
-                    pa.x[:] += pa.u[:] * dt
+                if t > self.wall_time:
+                    if ((t - self.wall_time) // self.T) % 2 == 0:
+                        pa.u[:] = self.stirrer_velocity
+                        pa.x[:] += pa.u[:] * dt
+                    else:
+                        pa.u[:] = -self.stirrer_velocity
+                        pa.x[:] += pa.u[:] * dt
                 else:
-                    pa.u[:] = -self.stirrer_velocity
-                    pa.x[:] += pa.u[:] * dt
+                    pa.u[:] = 0.
 
     def customize_output(self):
         self._mayavi_config('''
@@ -564,6 +596,7 @@ class Problem(Application):
     def post_process(self, fname):
 
         import matplotlib.pyplot as plt
+        from mpl_toolkits.axes_grid1 import make_axes_locatable
         from pysph.solver.utils import load, get_files
         from pysph.solver.utils import iter_output
         import os
@@ -571,106 +604,56 @@ class Problem(Application):
         info = self.read_info(fname)
         files = self.output_files
 
-        # initial position of the cylinder
-        fname = files[0]
-        data = load(fname)
-        rigid_body = data['arrays']['rigid_body_master']
-        y_0 = rigid_body.x[0]
+        # print(files)
+        info = self.read_info(fname)
+        output_files = self.output_files
+        output_times = self.output_at_times
+        logfile = os.path.join(
+            os.path.dirname(fname),
+            'dinesh_2024_mixing_with_stirrer_2d.log')
+        to_plot = get_files_at_given_times_from_log(output_files, output_times,
+                                                    logfile)
+        for i, f in enumerate(to_plot):
+            data = load(f)
+            _t = data['solver_data']['t']
+            fluid = data['arrays']['fluid']
+            tank = data['arrays']['tank']
+            stirrer = data['arrays']['stirrer']
+            rigid_body = data['arrays']['rigid_body_combined_slave']
 
-        y = []
-        v = []
-        u = []
-        t = []
-        fy = []
+            c_min = min((fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5)
+            c_max = max((fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5)
+            vmag = (fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5
+            # c_min = min(fluid.vmag)
+            # c_max = max(fluid.vmag)
 
-        for sd, rigid_body in iter_output(files, 'rigid_body_master'):
-            _t = sd['t']
-            # y.append(rigid_body.xcm[1])
-            # u.append(rigid_body.vcm[0])
-            # v.append(rigid_body.vcm[1])
-            fy.append(rigid_body.v[0])
-            t.append(_t)
-        print(fy)
-        print(t, "t is ")
-        # non dimentionalize it
-        # penetration_current = (np.asarray(y)[::1] - y_0) / self.rigid_body_diameter
-        # t_current = np.asarray(t)[::1] * (9.81 / self.rigid_body_diameter)**0.5
+            s = 0.1
+            fig, axs = plt.subplots(1, 1, figsize=(12, 6))
 
-        # Data from literature
-        path = os.path.abspath(__file__)
-        directory = os.path.dirname(path)
+            axs.scatter(tank.x, tank.y, s=s, c="k")
+            axs.scatter(stirrer.x, stirrer.y, s=s, c="k")
+            axs.scatter(rigid_body.x, rigid_body.y, s=s, c="r")
+            tmp = axs.scatter(fluid.x, fluid.y, s=s, c=vmag, vmin=c_min,
+                              vmax=c_max, cmap="jet")
+            # tmp = axs.scatter(fluid.x, fluid.y, s=s, c=fluid.p, vmin=c_min,
+            #                   vmax=c_max, cmap="hot")
 
-        # # load the data
-        # # We use Sun 2018 accurate and efficient water entry paper data for validation
-        # if self.rigid_body_rho == 500.:
-        #     data_y_penetration_sun_2018_exp = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_experimental_data.csv'), delimiter=',')
-        #     data_y_penetration_sun_2018_BEM = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_BEM_data.csv'), delimiter=',')
-        #     # This is 200 resolution D / dx = 200
-        #     data_y_penetration_sun_2018_SPH = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_SPH_data.csv'), delimiter=',')
-        # if self.rigid_body_rho == 1000.:
-        #     data_y_penetration_sun_2018_exp = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_experimental_data.csv'), delimiter=',')
-        #     data_y_penetration_sun_2018_BEM = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_BEM_data.csv'), delimiter=',')
-        #     # This is 200 resolution D / dx = 200
-        #     data_y_penetration_sun_2018_SPH = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_SPH_data.csv'), delimiter=',')
+            axs.set_xlabel('x')
+            axs.set_ylabel('y')
+            # axs.set_xlim([x_min, x_max])
+            # axs.set_ylim([y_min, y_max])
+            # axs.grid()
+            axs.set_aspect('equal', 'box')
 
-        # t_exp, penetration_exp = data_y_penetration_sun_2018_exp[:, 0], data_y_penetration_sun_2018_exp[:, 1]
-        # t_BEM, penetration_BEM = data_y_penetration_sun_2018_BEM[:, 0], data_y_penetration_sun_2018_BEM[:, 1]
-        # t_SPH, penetration_SPH = data_y_penetration_sun_2018_SPH[:, 0], data_y_penetration_sun_2018_SPH[:, 1]
-        # # =================
-        # # sort webplot data
-        # p = t_SPH.argsort()
-        # t_SPH = t_SPH[p]
-        # penetration_SPH = penetration_SPH[p]
-        # # t_SPH = np.delete(t_SPH, np.where(t_SPH > 1.65 and t_SPH < 1.75))
-        # # penetration_SPH = np.delete(penetration_SPH,  np.where(t_SPH > 1.65 and t_SPH < 1.75))
-        # t_SPH = np.delete(t_SPH, -4)
-        # penetration_SPH = np.delete(penetration_SPH, -4)
+            divider = make_axes_locatable(axs)
+            cax = divider.append_axes('right', size='3%', pad=0.1)
+            fig.colorbar(tmp, cax=cax, format='%.0e', orientation='vertical',
+                         shrink=0.3)
+            cax.set_ylabel('Velocity magnitude')  # cax == cb.ax
 
-        # p = t_BEM.argsort()
-        # t_BEM = t_BEM[p]
-        # penetration_BEM = penetration_BEM[p]
-        # # sort webplot data
-        # # =================
-
-        # res = os.path.join(self.output_dir, "results.npz")
-        # np.savez(res,
-        #          t_exp=t_exp,
-        #          penetration_exp=penetration_exp,
-        #          t_BEM=t_BEM,
-        #          penetration_BEM=penetration_BEM,
-        #          t_SPH=t_SPH,
-        #          penetration_SPH=penetration_SPH,
-        #          t_current=t_current,
-        #          penetration_current=-penetration_current)
-        # data = np.load(res)
-
-        # ========================
-        # Variation of y penetration
-        # ========================
-        plt.clf()
-        # plt.plot(t_exp, penetration_exp, "^", label='Experimental')
-        # plt.plot(t_SPH, penetration_SPH, "-+", label='SPH')
-        # plt.plot(t_BEM, penetration_BEM, "--", label='BEM')
-        # plt.plot(t_current, -penetration_current, "-", label='Current')
-        print("len of t is", len(t))
-        print("len of v is", len(fy))
-        plt.plot(t, fy)
-
-        plt.title('Variation in y-penetration')
-        plt.xlabel('t (g / D)^{1/2}')
-        plt.ylabel('force')
-        plt.legend()
-        fig = os.path.join(os.path.dirname(fname), "penetration_vs_t.png")
-        plt.savefig(fig, dpi=300)
-        # ========================
-        # x amplitude figure
-        # ========================
+            # save the figure
+            figname = os.path.join(os.path.dirname(fname), "time" + str(i) + ".pdf")
+            fig.savefig(figname, dpi=300)
 
 
 if __name__ == '__main__':

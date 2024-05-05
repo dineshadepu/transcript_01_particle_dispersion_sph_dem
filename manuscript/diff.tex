@@ -1,4 +1,7 @@
 \documentclass[preprint,12pt]{elsarticle}
+%DIF LATEXDIFF DIFFERENCE FILE
+%DIF DEL paper_prev_draft.tex   Sun Apr 28 00:02:01 2024
+%DIF ADD paper.tex              Mon Apr 29 14:05:04 2024
 % \documentclass[draft,12pt]{elsarticle}
 
 \usepackage{hyperref}
@@ -9,7 +12,11 @@
 \usepackage{multirow}
 \usepackage{relsize}
 \usepackage[utf8]{inputenc}
-\usepackage[capitalise]{cleveref}
+%DIF 12c12
+%DIF < \usepackage{cleveref}
+%DIF -------
+\usepackage[capitalise]{cleveref} %DIF > 
+%DIF -------
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage[section]{placeins}
@@ -34,12 +41,93 @@
 % \linenumbers
 
 \journal{}
+%DIF PREAMBLE EXTENSION ADDED BY LATEXDIFF
+%DIF UNDERLINE PREAMBLE %DIF PREAMBLE
+\RequirePackage[normalem]{ulem} %DIF PREAMBLE
+\RequirePackage{color}\definecolor{RED}{rgb}{1,0,0}\definecolor{BLUE}{rgb}{0,0,1} %DIF PREAMBLE
+\providecommand{\DIFaddtex}[1]{{\protect\color{blue}\uwave{#1}}} %DIF PREAMBLE
+\providecommand{\DIFdeltex}[1]{{\protect\color{red}\sout{#1}}}                      %DIF PREAMBLE
+%DIF SAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddbegin}{} %DIF PREAMBLE
+\providecommand{\DIFaddend}{} %DIF PREAMBLE
+\providecommand{\DIFdelbegin}{} %DIF PREAMBLE
+\providecommand{\DIFdelend}{} %DIF PREAMBLE
+\providecommand{\DIFmodbegin}{} %DIF PREAMBLE
+\providecommand{\DIFmodend}{} %DIF PREAMBLE
+%DIF FLOATSAFE PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFaddFL}[1]{\DIFadd{#1}} %DIF PREAMBLE
+\providecommand{\DIFdelFL}[1]{\DIFdel{#1}} %DIF PREAMBLE
+\providecommand{\DIFaddbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFaddendFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelbeginFL}{} %DIF PREAMBLE
+\providecommand{\DIFdelendFL}{} %DIF PREAMBLE
+%DIF HYPERREF PREAMBLE %DIF PREAMBLE
+\providecommand{\DIFadd}[1]{\texorpdfstring{\DIFaddtex{#1}}{#1}} %DIF PREAMBLE
+\providecommand{\DIFdel}[1]{\texorpdfstring{\DIFdeltex{#1}}{}} %DIF PREAMBLE
+\newcommand{\DIFscaledelfig}{0.5}
+%DIF HIGHLIGHTGRAPHICS PREAMBLE %DIF PREAMBLE
+\RequirePackage{settobox} %DIF PREAMBLE
+\RequirePackage{letltxmacro} %DIF PREAMBLE
+\newsavebox{\DIFdelgraphicsbox} %DIF PREAMBLE
+\newlength{\DIFdelgraphicswidth} %DIF PREAMBLE
+\newlength{\DIFdelgraphicsheight} %DIF PREAMBLE
+% store original definition of \includegraphics %DIF PREAMBLE
+\LetLtxMacro{\DIFOincludegraphics}{\includegraphics} %DIF PREAMBLE
+\newcommand{\DIFaddincludegraphics}[2][]{{\color{blue}\fbox{\DIFOincludegraphics[#1]{#2}}}} %DIF PREAMBLE
+\newcommand{\DIFdelincludegraphics}[2][]{% %DIF PREAMBLE
+\sbox{\DIFdelgraphicsbox}{\DIFOincludegraphics[#1]{#2}}% %DIF PREAMBLE
+\settoboxwidth{\DIFdelgraphicswidth}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\settoboxtotalheight{\DIFdelgraphicsheight}{\DIFdelgraphicsbox} %DIF PREAMBLE
+\scalebox{\DIFscaledelfig}{% %DIF PREAMBLE
+\parbox[b]{\DIFdelgraphicswidth}{\usebox{\DIFdelgraphicsbox}\\[-\baselineskip] \rule{\DIFdelgraphicswidth}{0em}}\llap{\resizebox{\DIFdelgraphicswidth}{\DIFdelgraphicsheight}{% %DIF PREAMBLE
+\setlength{\unitlength}{\DIFdelgraphicswidth}% %DIF PREAMBLE
+\begin{picture}(1,1)% %DIF PREAMBLE
+\thicklines\linethickness{2pt} %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\framebox(1,1){}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,0){\line( 1,1){1}}}% %DIF PREAMBLE
+{\color[rgb]{1,0,0}\put(0,1){\line(1,-1){1}}}% %DIF PREAMBLE
+\end{picture}% %DIF PREAMBLE
+}\hspace*{3pt}}} %DIF PREAMBLE
+} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbegin}{\DIFaddbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddend}{\DIFaddend} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbegin}{\DIFdelbegin} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelend}{\DIFdelend} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbegin}{\DIFOaddbegin \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbegin}{\DIFOdelbegin \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelend}{\DIFOaddend \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddbeginFL}{\DIFaddbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOaddendFL}{\DIFaddendFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelbeginFL}{\DIFdelbeginFL} %DIF PREAMBLE
+\LetLtxMacro{\DIFOdelendFL}{\DIFdelendFL} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddbeginFL}{\DIFOaddbeginFL \let\includegraphics\DIFaddincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFaddendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelbeginFL}{\DIFOdelbeginFL \let\includegraphics\DIFdelincludegraphics} %DIF PREAMBLE
+\DeclareRobustCommand{\DIFdelendFL}{\DIFOaddendFL \let\includegraphics\DIFOincludegraphics} %DIF PREAMBLE
+%DIF LISTINGS PREAMBLE %DIF PREAMBLE
+\RequirePackage{listings} %DIF PREAMBLE
+\RequirePackage{color} %DIF PREAMBLE
+\lstdefinelanguage{DIFcode}{ %DIF PREAMBLE
+%DIF DIFCODE_UNDERLINE %DIF PREAMBLE
+  moredelim=[il][\color{red}\sout]{\%DIF\ <\ }, %DIF PREAMBLE
+  moredelim=[il][\color{blue}\uwave]{\%DIF\ >\ } %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstdefinestyle{DIFverbatimstyle}{ %DIF PREAMBLE
+	language=DIFcode, %DIF PREAMBLE
+	basicstyle=\ttfamily, %DIF PREAMBLE
+	columns=fullflexible, %DIF PREAMBLE
+	keepspaces=true %DIF PREAMBLE
+} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim}{\lstset{style=DIFverbatimstyle}}{} %DIF PREAMBLE
+\lstnewenvironment{DIFverbatim*}{\lstset{style=DIFverbatimstyle,showspaces=true}}{} %DIF PREAMBLE
+%DIF END PREAMBLE EXTENSION ADDED BY LATEXDIFF
 
 \begin{document}
 
 \begin{frontmatter}
 
-  \title{{DEM}-{SPH} study of particles dispersion in fluid}
+  \title{\DIFdelbegin \DIFdel{Study of mixing behaviour }\DIFdelend \DIFaddbegin {\DIFadd{DEM}}\DIFadd{-}{\DIFadd{SPH}} \DIFadd{study }\DIFaddend of \DIFdelbegin \DIFdel{spherical }\DIFdelend particles \DIFaddbegin \DIFadd{dispersion }\DIFaddend in fluid\DIFdelbegin \DIFdel{using stirrer}\DIFdelend }
   \author[XXX]{Dinesh Adepu\corref{cor1}}
   \ead{d.dinesh@surrey.ac.uk}
   \author[University of Surrey]{Chuan Yu Wu}
@@ -50,31 +138,7 @@
 
 
 \begin{abstract}
-  \begin{itemize}
-    Mixing powdered substances in tanks using a stirrer is a common occurrence
-    across various industries. Typically, this phenomenon is studied
-    numerically due to the complex nonlinear physics involved. In our current
-    research, we have developed a solver combining Smoothed Particle
-    Hydrodynamics (SPH) and Discrete Element Method (DEM) to investigate the
-    mixing behavior of SPH particles within a tank under the influence of a
-    stirrer operating at different speeds.  The SPH method governs the fluid
-    phase, while the dynamics and interactions of particles are captured by
-    the DEM. We achieve a fully resolved coupling between solid particles and
-    fluid particles by discretizing solid particles into dummy SPH
-    particles. Our validation process includes verifying the fluid solver's
-    accuracy through a Poiseuille problem and validating the DEM solver by
-    benchmarking interactions between two particles and particle-wall impacts.
-    The coupled model's validation extends to various benchmarks, such as
-    simulating single-particle entry in both 2D and 3D configurations,
-    including a cube entering a tank. Following validation, we proceed with
-    the mixing study. We conduct two simulations: one with spherical particles
-    of uniform radius and another with particles having varying radius
-    distributions.  Our findings reveal that as the stirrer speed increases,
-    particles tend to accumulate initially. However, with further increases in
-    stirrer speed, particles mix more effectively, and no particle sticking
-    occurs. We have leveraged an open-source software, adapting and
-    integrating the coupled model to conduct thorough mixing analyses.
-  \end{itemize}
+
 \end{abstract}
 
 \begin{keyword}
@@ -96,19 +160,30 @@
 
 Particle dispersion is a fundamental physical phenomenon encountered in
 various industries where powder and fluid interactions are pivotal.  Petroleum
-industry \cite{wang2023developments}, the transport of bodies in internal
+industry \cite{wang2023developments}, \DIFdelbegin \DIFdel{The }\DIFdelend \DIFaddbegin \DIFadd{the }\DIFaddend transport of bodies in internal
 systems \cite{Dai2021}, debris flow \cite{Qingyun2022}, the food processing
 industry \cite{Karunasena2014}, and ice-sea modeling \cite{Mintu2018} are a
-few areas to mention.  In many processes the mixing of powder with fluid using
-a stirrer are commonplace \cite{li2022study}.  \Cref{fig:gloabl_body_frame_rb}
+few areas to mention.  \DIFdelbegin \DIFdel{Particularly, processes involving }\DIFdelend \DIFaddbegin \DIFadd{In many processes }\DIFaddend the mixing of powder with fluid using
+a stirrer are commonplace \cite{li2022study}.  \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\Cref{fig:gloabl_body_frame_rb}
+}\hspace{0pt}%DIFAUXCMD
 illustrates a sample particle dispersion problem studied in the current work.
-While experimental investigation of such processes is often impractical due to
+}\DIFaddend While experimental investigation of such processes is often impractical due to
 their highly nonlinear nature, numerical methods offer a viable alternative.
-While these systems are studied with numerical methods, they are a part of
-two-way coupling models. In numerical method approach, one can employ either a
-mesh-based or meshless technique to study the current phenomena.
+\DIFdelbegin \DIFdel{These
+}\DIFdelend \DIFaddbegin \DIFadd{While these }\DIFaddend systems are studied \DIFdelbegin \DIFdel{as }\DIFdelend \DIFaddbegin \DIFadd{with numerical methods, they are a }\DIFaddend part of
+two-way coupling models. \DIFdelbegin \DIFdel{The two-way coupling
+phenomena are nonlinear, and an analytical study is not feasible. A numerical study is preferable while handling such a
+phenomenon. A }\DIFdelend \DIFaddbegin \DIFadd{In numerical method approach, one can employ either a
+}\DIFaddend mesh-based or meshless technique \DIFdelbegin \DIFdel{can be utilized to study rigid fluid coupling (RFC) numerically.
+\mbox{%DIFAUXCMD
+\Cref{fig:gloabl_body_frame_rb} }\hspace{0pt}%DIFAUXCMD
+illustrates a sample particle dispersion
+problem studied in the current work.
+}\DIFdelend \DIFaddbegin \DIFadd{to study the current phenomena.
+}
 
-\begin{figure}[!htpb]
+\DIFaddend \begin{figure}[!htpb]
   \centering
   \includegraphics[width=0.4\textwidth]{images/hs_tank_fluid_with_particles}
   \caption{An illustrative figure showcasing the dispersion of particles within a free surface tank.}
@@ -120,26 +195,30 @@ mesh-based or meshless technique to study the current phenomena.
 The combination of Discrete Element Method (DEM) for solid particle
 interactions and Computational Fluid Dynamics (CFD) for fluid modeling
 is a classic approach in handling particulate flow problem. In
-mesh-based modeling, lattice Boltzmann method (LBM)
+mesh-based \DIFdelbegin \DIFdel{CFD-DEM }\DIFdelend modeling, lattice Boltzmann method (LBM)
 \cite{xiong2014lbm} and finite volume method (FVM) \cite{kloss2012models} are
 utilized to handle the fluid dynamics. Similarly, in meshless schemes like
 Smoothed Particle Hydrodynamics (SPH) \cite{peng2021fully},
 Moving Particle Semi-implicit (MPS), and Particle Finite Element
 Method (PFEM) \cite{li2019modeling, franci2020pfem}, handles the fluid
 dynamics.
+\DIFaddbegin 
 
 
-While handling the interaction between the fluid and solid particles, the
+\DIFaddend While handling the interaction between the fluid and solid particles, the
 interaction can be categorized into a resolved and unresolved coupling. In
 unresolved coupling, simplified models compute forces acting on solid
-particles within fluid flow, \todoin{while fully resolved coupling computes
-  forces comprehensively}. Both strategies are applicable in both meshless
+particles within fluid flow, \DIFdelbegin \DIFdel{while fully resolved coupling computes
+forces comprehensively}\DIFdelend \DIFaddbegin \todoin{while fully resolved coupling computes
+  forces comprehensively}\DIFaddend . Both strategies are applicable in both meshless
 \cite{cleary2015prediction, trujillo2020smooth} and mesh-based
-\cite{van2008numerical, ma2022review} CFD-DEM techniques.  In addition to the
-study mono-sized particle behaviour in a fluid \cite{trujillo2020smooth},
-research such as \cite{brosh2014accelerating} and \cite{peng2021fully} explore
+\cite{van2008numerical, ma2022review} CFD-DEM techniques.  \DIFdelbegin \DIFdel{Research }\DIFdelend \DIFaddbegin \DIFadd{In addition to the
+study mono-sized particle behaviour in a fluid \mbox{%DIFAUXCMD
+\cite{trujillo2020smooth}}\hspace{0pt}%DIFAUXCMD
+,
+research }\DIFaddend such as \cite{brosh2014accelerating} and \cite{peng2021fully} explore
 wide particle size distributions with CFD-DEM and SPH-DEM respectively.
-Regarding non-Newtonian fluid modelling in mesh-based schemes, works like
+Regarding non-Newtonian fluid \DIFdelbegin \DIFdel{modeling }\DIFdelend \DIFaddbegin \DIFadd{modelling }\DIFaddend in mesh-based schemes, works like
 \cite{li2018dam} are notable and in meshless schemes, \cite{peng2021fully} is
 notable. \citet{zhu2008discrete} and \citet{ma2022review} delve into
 investigations on spherical and non-spherical particles respectively within
@@ -159,33 +238,47 @@ physics, non-Newtonian fluid flows \cite{peng2021fully} among other areas
 \cite{monaghan2012smoothed}.  Various kind of particulate flows, involving,
 simple spherical particles mixing using unresolved coupling
 \cite{cleary2015prediction, markauskas2019coupled} and with debris flow
-\cite{canelas2016sph} with fully resolved coupling approach were analysed
-using SPH-DEM.  Handling particles of arbitrary shape in fluid flow is
+\cite{canelas2016sph} with fully resolved coupling approach \DIFdelbegin \DIFdel{has been
+solved }\DIFdelend \DIFaddbegin \DIFadd{were analysed
+}\DIFaddend using SPH-DEM\DIFdelbegin \DIFdel{framework}\DIFdelend .  Handling particles of arbitrary shape in fluid flow is
 addressed in various works, including those by \citet{peng2021fully,
   canelas2016sph, amicarelli2015smoothed}.  Several variants of SPH, such as
-WCSPH \cite{peng2021fully, cleary2015prediction}, and ISPH
+WCSPH \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\cite{peng2021fully, cleary2015}}\hspace{0pt}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{peng2021fully, cleary2015prediction}}\hspace{0pt}%DIFAUXCMD
+}\DIFaddend , and ISPH
 \cite{asai2021fluid}, are utilized for modeling fluid flow with particulate
 flows. The coupling between fluid and rigid bodies in the fully resolved
 category employs techniques such as the fixed ghost particle technique
 \cite{canelas2016sph, asai2021fluid}, single layers of dummy SPH particles
 \cite{peng2021fully}, and simple repulsive forces
 \cite{monaghan2009sph}. Coupling between SPH fluid particles and solid
-structures discretized as vertex edges is also proposed by
-\citet{park2023new}. Particle settling with variable sizes is studied by
+structures discretized as vertex edges is \DIFdelbegin \DIFdel{proposed by
+\mbox{%DIFAUXCMD
+\cite{park2023new}}\hspace{0pt}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{also proposed by
+\mbox{%DIFAUXCMD
+\citet{park2023new}}\hspace{0pt}%DIFAUXCMD
+}\DIFaddend . Particle settling with variable sizes is studied by
 \citet{zou2022study}.  Elastic behavior of spherical particles and dispersion
 studies are conducted by \citet{ng2021numerical}.  Interaction between rigid
 bodies of arbitrary sizes is addressed using various techniques, such as those
-discussed in papers by \citet{asai2021fluid}, \citet{peng2021fully},
+discussed in papers by \citet{asai2021fluid}, \DIFdelbegin \DIFdel{citet}%DIFDELCMD < {%%%
+\DIFdel{peng2021fully}%DIFDELCMD < }%%%
+\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\citet{peng2021fully}}\hspace{0pt}%DIFAUXCMD
+}\DIFaddend ,
 \citet{canelas2016sph}.
 
 
 
-\todoin{Current research gap}. In the current work we cosider the particle
+\DIFaddbegin \todoin{Current research gap}\DIFadd{. }\DIFaddend In the current work we cosider the particle
 dispersion within a large-scale under stirrer mixing phenomenon. We employ
 Smoothed Particle Hydrodynamics (SPH) to model fluid dynamics and the Discrete
 Element Method (DEM) to handle the dynamics and contact interactions among
-spherical particles. The interaction between solids and fluids is modelled
-using a fixed ghost particle approach, ensuring a fully resolved
+spherical particles. The interaction between solids and fluids is \DIFdelbegin \DIFdel{managed }\DIFdelend \DIFaddbegin \DIFadd{modelled
+}\DIFaddend using a fixed ghost particle approach, ensuring a fully resolved
 simulation. We validate the fluid solver independently using Poiseuille flow
 and the DEM solver separately using fundamental benchmarks such as
 particle-particle and particle-wall impacts. Subsequently, the fully resolved
@@ -193,14 +286,14 @@ coupled SPH-DEM solver is validated using three benchmarks: a single particle
 entering, two particles settling, and a forced wedge entry into a steady
 hydrostatic tank. Upon confirming the fidelity of the solver, we proceed with
 analyzing the mixing behavior of various spherical particles influenced by a
-stirrer in a tank. We investigate scenarios involving particles of different
+stirrer in a \DIFdelbegin \DIFdel{water }\DIFdelend tank. We investigate scenarios involving particles of different
 densities, stirrer velocities, and variable sizes as part of our case
 study. The development work is conducted using
 PySPH\cite{ramachandran2021pysph}, an open-source code available at
-\url{https://github.com/pypr/pysph}.  We modify the current codebase to
+\url{https://github.com/pypr/pysph}.  \DIFaddbegin \DIFadd{We modify the current codebase to
 integrate implementations of the Discrete Element Method (DEM) and the
 Smoothed Particle Hydrodynamics (SPH) coupled with DEM model for our ongoing
-research. To ensure reproducibility, we utilize the automan package
+research. }\DIFaddend To ensure reproducibility, we utilize the automan package
 \cite{ramachandran2018automan} to automate all results generated in the
 current manuscript, aiming for a reproducible research approach.
 
@@ -221,22 +314,37 @@ validate the current solver, and particle dispersion is examined.
 \section{Fluid modeling}
 \label{sec:fluid-modeling}
 In the current work, we follow a weakly-compressible SPH approach to model the
-fluid. The continuum in SPH is modeled using particles, which has physical
-properties such as mass, velocity, and these particles interact based on the
+fluid. \DIFdelbegin \DIFdel{Smoothed particle hydrodynamics is initially developed by Lucy
+\mbox{%DIFAUXCMD
+\cite{lucy1977numerical} }\hspace{0pt}%DIFAUXCMD
+and Gingold and Monaghan \mbox{%DIFAUXCMD
+\cite{gingold1977smoothed}
+}\hspace{0pt}%DIFAUXCMD
+to model astrophysical problems. }\DIFdelend The continuum in SPH is modeled using particles, which has physical
+properties such as mass, velocity, and \DIFdelbegin \DIFdel{the
+}\DIFdelend \DIFaddbegin \DIFadd{these }\DIFaddend particles interact based on the
 governing equations using a Guassian-like kernel
-\cite{monaghan-review:2005,morris1997modeling}.
+\DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\cite{SPH_papers}}\hspace{0pt}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{monaghan-review:2005,morris1997modeling}}\hspace{0pt}%DIFAUXCMD
+}\DIFaddend .
 
 
 \FloatBarrier%
 \subsection{Fluid governing equations}
 \label{sec:fluid--governing-equations}
-The fluid motion is governed by the conservation of mass and the conservation
-of linear momentum, which can be expressed by the following equations:
-\begin{equation}
-  \label{eq:ce}
+\DIFdelbegin \DIFdel{Equations governing the fluid motion are, }\DIFdelend \DIFaddbegin \DIFadd{The fluid motion is governed by the }\DIFaddend conservation of mass \DIFdelbegin \begin{displaymath}
+  \DIFdel{%DIFDELCMD < \label{eq:ce}%%%
   \frac{d \rho}{d t} = - \rho \; \frac{\partial u_i}{\partial x_i},
-\end{equation}
-\begin{equation}
+}\end{displaymath}%DIFAUXCMD
+\DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{and the }\DIFaddend conservation
+of linear momentum, \DIFaddbegin \DIFadd{which can be expressed by the following equations:
+}\begin{equation}
+  \DIFadd{\label{eq:ce}
+  \frac{d \rho}{d t} = - \rho \; \frac{\partial u_i}{\partial x_i},
+}\end{equation}
+\DIFaddend \begin{equation}
   \label{eq:me}
   \frac{d u_i}{d t} = \frac{1}{\rho} \; \frac{\partial \sigma_{ij}}{\partial x_j}
   + g_i,
@@ -246,7 +354,7 @@ the velocity field, $x_j$ is the $j$\textsuperscript{th} component of the
 position vector, $g_i$ is the component of body force per unit mass and
 $\sigma_{ij}$ is stress tensor.
 
-The stress tensor is split into pressure and viscous parts,
+The stress tensor is split into \DIFdelbegin \DIFdel{a }\DIFdelend pressure and viscous parts,
 \begin{equation}
   \label{eq:fluid-stress-decomposition}
   \sigma_{ij} = - p \delta_{ij} + 2 \eta \frac{\partial u_i}{\partial x_j}
@@ -262,10 +370,10 @@ The governing equations involve function, derivative and divergence
 operators. In SPH, these operators are approximated based on the positions,
 mass and the kernel values of the discretized particles. Assume that the
 domain is discretized into N particles with mass $m_i$ and volume
-$V_i$, We have
+\DIFdelbegin \DIFdel{$\Delta v_i$}\DIFdelend \DIFaddbegin \DIFadd{$V_i$}\DIFaddend , We have
 \begin{equation}
   \label{eq:mass_repr}
-  m_j = V_i \> \rho_i.
+  m_j = \DIFdelbegin \DIFdel{\Delta v}\DIFdelend \DIFaddbegin \DIFadd{V}\DIFaddend _i \> \rho_i.
 \end{equation}
 Based on this discretization, the discrete function approximation is given as,
 \begin{equation}
@@ -293,7 +401,10 @@ An approximation of the divergence operator is used to discretize the
 
 % \subsection{Discretized fluid governing equations}
 The SPH discretization of the continuity
-equation~\cref{eq:sph-discretization-continuity} is given as,
+equation~\cref{eq:sph-discretization-continuity} \DIFdelbegin \DIFdel{and the momentum equation
+~\mbox{%DIFAUXCMD
+\cref{eq:sph-momentum-fluid} }\hspace{0pt}%DIFAUXCMD
+respectively are}\DIFdelend \DIFaddbegin \DIFadd{is given as}\DIFaddend ,
 \begin{equation}
   \label{eq:sph-discretization-continuity}
   \frac{{d}\rho_a}{dt} = \sum_{b} \; \frac{m_b}{\rho_{b}} \;
@@ -301,7 +412,7 @@ equation~\cref{eq:sph-discretization-continuity} is given as,
 \end{equation}
 
 %
-Similarly, the discretized momentum equation is written as,
+Similarly, the discretized momentum equation \DIFdelbegin \DIFdel{for fluids }\DIFdelend is written as,
 \begin{multline}
   \label{eq:sph-momentum-fluid}
   \frac{{d}\ten{u}_{a}}{dt} = - \sum_{b} m_b
@@ -313,7 +424,9 @@ Similarly, the discretized momentum equation is written as,
   \ten{g}_{a},
 \end{multline}
 where $\ten{I}$ is the identity matrix, $\eta$ is the kinematic viscosity of the
-fluid and \todoin{\cite{morris1997modeling}} formulation is used to discretize the
+fluid and \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\cite{morris1997modeling} }\hspace{0pt}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \todoin{\cite{morris1997modeling}} \DIFaddend formulation is used to discretize the
 viscosity term.
 
 We add to the momentum equation an additional artificial viscosity term
@@ -353,7 +466,11 @@ initial density of the particles.
 \subsection{Boundary Conditions}
 \label{sec:boundary_conditions}
 
-The ghost particle approach proposed by \citet{Adami2012} is used to model the
+The ghost particle approach \DIFdelbegin \DIFdel{of \mbox{%DIFAUXCMD
+\cite{Adami2012} }\hspace{0pt}%DIFAUXCMD
+}\DIFdelend \DIFaddbegin \DIFadd{proposed by \mbox{%DIFAUXCMD
+\citet{Adami2012} }\hspace{0pt}%DIFAUXCMD
+}\DIFaddend is used to model the
 boundaries. We use three layers of ghost particles to model the solid wall.
 The properties of the solid wall are interpolated from the fluid particles.
 
@@ -369,7 +486,7 @@ computed using,
   \label{eq:v-ghost}
   \ten{\hat{u}}_a = \frac{\sum_b\ten{u}_b W_{ab}}{\sum_b W_{ab}},
 \end{equation}
-where $\ten{u}_b$, is the velocity of the fluid particle $b$ and $W_{ab}$ is the kernel
+where $\ten{u}_b$, is the \DIFdelbegin \DIFdel{momentum }\DIFdelend velocity of the fluid \DIFaddbegin \DIFadd{particle $b$ }\DIFaddend and $W_{ab}$ is the kernel
 value between the fluid particle and the ghost particle.
 
 
@@ -533,7 +650,7 @@ interaction with the fluid particles follows \cref{sec:rfc}.
 
 
 \FloatBarrier%
-\subsection{Contact models}
+\subsection{Contact \DIFdelbegin \DIFdel{resolution}\DIFdelend \DIFaddbegin \DIFadd{models}\DIFaddend }
 \label{sec:dem}
 
 \begin{figure}[!htpb]
@@ -544,18 +661,26 @@ interaction with the fluid particles follows \cref{sec:rfc}.
   \label{fig:spherical-particles-in-tank-dem}
 \end{figure}
 
-We resolve the contact among the spherical particles using the discrete
-element method \cite{luding_dem_2008}. In the current work we have utilized a
+We resolve the contact among the spherical particles using \DIFaddbegin \DIFadd{the }\DIFaddend discrete
+element method \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{luding_dem_2008}}\hspace{0pt}%DIFAUXCMD
+}\DIFaddend . In the current work we have utilized a
 non-linear contact force model. In DEM, the force acting on a particle $a$ due
 to the interaction with the particle $b$ is resolved into a normal and
-tangential component. The normal force component represents a repulsive force,
+tangential component. The normal force component \DIFdelbegin \DIFdel{is utilised to make sure that the particle do not
+penetrate into each other}\DIFdelend \DIFaddbegin \DIFadd{represents a repulsive force}\DIFaddend ,
 while the tangential component is used to model the friction between the
 interacting particles.  The normal force ($\teng{F}_a^{n}$) on particle $a$
 due to the interaction with the particles $b$ is given by a non-linear,
-Hetzian model \cite{brilliantov1996model},
-\begin{equation}
+Hetzian model \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\citet{brilliantov1996model}}\hspace{0pt}%DIFAUXCMD
+,
+}\DIFdelend \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{brilliantov1996model}}\hspace{0pt}%DIFAUXCMD
+,
+}\DIFaddend \begin{equation}
   \label{eq:contact-algorithm-normal}
-  \ten{F}_a^n = k_n \delta_{n} \ten{n}.
+  \ten{F}_a^n = k\DIFdelbegin \DIFdel{_r }\DIFdelend \DIFaddbegin \DIFadd{_n }\DIFaddend \delta_{n} \ten{n}.
 \end{equation}
 Here, the overlap $\delta_{n}$ is computed using
 \begin{equation}
@@ -563,41 +688,45 @@ Here, the overlap $\delta_{n}$ is computed using
   \delta_{n} = R_{a} + R_{b} - r_{ab},
 \end{equation}
 $k_r$ is the normal spring stiffness coefficient, which is computed using the
-material properties of the bodies in contact, given by:
-\begin{equation}
-  \label{eq:kf-stiffness}
+material properties of the bodies in contact\DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
+\cite{golshan2023lethe}}\hspace{0pt}%DIFAUXCMD
+.
+}\DIFdelend \DIFaddbegin \DIFadd{, given by:
+}\begin{equation}
+  \DIFadd{\label{eq:kf-stiffness}
   k_n = \frac{4}{3} \; E^{*} \; \sqrt{R^{*} \delta_n}
-\end{equation}
+}\end{equation}
 \begin{equation}
-  \label{eq:kf-stiffness}
+  \DIFadd{\label{eq:kf-stiffness}
   k_t = 8 \; G^{*} \; \sqrt{R^{*} \delta_n}
-\end{equation}
+}\end{equation}
 
 \begin{equation}
-  \label{eq:kf-stiffness}
+  \DIFadd{\label{eq:kf-stiffness}
   \eta_n = -2 \sqrt{\frac{5}{6}} \beta \; \sqrt{S_n m^*}
-\end{equation}
+}\end{equation}
 \begin{equation}
-  \label{eq:kf-stiffness}
+  \DIFadd{\label{eq:kf-stiffness}
   \eta_t = -2 \sqrt{\frac{5}{6}} \beta \; \sqrt{S_t m^*}
-\end{equation}
+}\end{equation}
 
 \begin{equation}
-  \label{eq:kf-stiffness}
+  \DIFadd{\label{eq:kf-stiffness}
   S_n = 2 E^{*} \sqrt{R^{*} \delta_n}
-\end{equation}
+}\end{equation}
 \begin{equation}
-  \label{eq:kf-stiffness}
+  \DIFadd{\label{eq:kf-stiffness}
   S_t = 8 G^{*} \sqrt{R^{*} \delta_n}
-\end{equation}
+}\end{equation}
 
 
 
 
-$\frac{1}{E^{*}} = \frac{1 -\nu_a^2}{E_a} + \frac{1 -\nu_b^2}{E_b}$
+\DIFadd{$\frac{1}{E^{*}} = \frac{1 -\nu_a^2}{E_a} + \frac{1 -\nu_b^2}{E_b}$
 $\frac{1}{G^{*}} = \frac{2 (2 - \nu_a) (1 + \nu_a)}{E_a} +  \frac{2 (2 - \nu_b) (1 + \nu_b)}{E_b}$
 $\beta = \frac{\ln{e}}{\ln{e}^2 + \pi}$
 $R^{*} = \frac{R_a R_b}{R_a + R_b}$
+}\DIFaddend 
 
 
 
@@ -608,7 +737,7 @@ particle $a$ and particle $b$ to compute the tangential force, which initially h
 a magnitude of zero ($|\Delta \textit{\textbf{l}}_a|=0$). The tangential spring
 is activated when the particle comes into contact with particle $b$. The
 tangential force is history-dependent. The contact friction force is
-proportional to the tangential displacement, which is integrated over
+proportional to the tangential \DIFdelbegin \DIFdel{spring }\DIFdelend displacement, which is integrated over
 the contact time as
 \begin{equation}
   \label{eq:tangential-force}
@@ -702,9 +831,10 @@ SPH particle due to the interaction with the fluid is given by,
 \begin{equation}
   \label{eq:rfc-force}
   \ten{F}_{\text{rfc}}^a = -m_a \sum_{f} m_f \bigg(\frac{p_f}{\rho_{f}^2} +
-  \frac{p_a}{\rho_{a}^2}\bigg) \nabla_{a} W(x_{af}),
-\end{equation}
-where, $m_a$ signifies the hydrodynamic mass of the sampled dummy SPH particle,
+  \frac{p_a}{\rho_{a}^2}\bigg) \nabla_{a} W(x_{af})\DIFdelbegin \DIFdel{.
+}\DIFdelend \DIFaddbegin \DIFadd{,
+}\DIFaddend \end{equation}
+\DIFdelbegin \DIFdel{Here}\DIFdelend \DIFaddbegin \DIFadd{Where}\DIFaddend , $m_a$ signifies the hydrodynamic mass of the sampled dummy SPH particle,
 and $\rho_a$ represents its hydrodynamic density. While $m_f$, $p_f$ and
 $\rho_f$ are mass, pressure and density of the fluid particle.
 
@@ -712,45 +842,52 @@ $\rho_f$ are mass, pressure and density of the fluid particle.
 \FloatBarrier%
 \section{Time Integration}
 
-We use the kick-drift-kick scheme \cite{monaghan-review:2005} for the time integration. We move the
+We use the kick-drift-kick scheme \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{monaghan-review:2005} }\hspace{0pt}%DIFAUXCMD
+}\DIFaddend for the time integration. We move the
 velocities of the fluid and the solid particles to half time step,
 \begin{equation}
   \label{eq:velocity-update-stage-1}
-  \ten{u}_a^{t+\frac{1}{2} \Delta t} = \ten{u}_a^{t} + \frac{\Delta t}{2} \bigg(\frac{d\ten{u}_{a}}{dt}\bigg)^t,
+  \ten{u}_a\DIFdelbegin \DIFdel{^{n+\frac{1}{2}} }\DIFdelend \DIFaddbegin \DIFadd{^{t+\frac{1}{2} \Delta t} }\DIFaddend = \ten{u}_a\DIFdelbegin \DIFdel{^{n} }\DIFdelend \DIFaddbegin \DIFadd{^{t} }\DIFaddend + \frac{\Delta t}{2} \bigg(\frac{d\ten{u}_{a}}{dt}\bigg)\DIFdelbegin \DIFdel{^n}\DIFdelend \DIFaddbegin \DIFadd{^t}\DIFaddend ,
 \end{equation}
-here, $()_a^t$ represents the properties of particle $a$ at time $t$ and
+\DIFaddbegin \DIFadd{here, $()_a^t$ represents the properties of particle $a$ at time $t$ and
 $()_a^{t+\frac{1}{2} \Delta t}$ corresponds to the halfway point between time
-$t$ and $t + \Delta t$. Then the time derivative of density is calculated using the
-\cref{eq:sph-discretization-continuity}, with velocities at half time step
-employed for the calculation.  The updated density and particle position for
+$t$ and $t + \Delta t$. }\DIFaddend Then the time derivative of density is calculated using the
+\cref{eq:sph-discretization-continuity}\DIFdelbegin \DIFdel{using the }\DIFdelend \DIFaddbegin \DIFadd{, with }\DIFaddend velocities at half time step
+\DIFdelbegin \DIFdel{. The new time step }\DIFdelend \DIFaddbegin \DIFadd{employed for the calculation.  The updated }\DIFaddend density and particle position \DIFdelbegin \DIFdel{is updated by,
+}\DIFdelend \DIFaddbegin \DIFadd{for
 the new time step are determined by,
-\begin{equation}
+}\DIFaddend \begin{equation}
   \label{eq:density-update-stage-2}
-  \rho_{a}^{t+\Delta t} = \rho_{a}^{t} + \Delta t \; \bigg(\frac{d\rho_{a}}{dt}\bigg)^{t+\frac{1}{2} \Delta t},
+  \rho_{a}\DIFdelbegin \DIFdel{^{n+1} }\DIFdelend \DIFaddbegin \DIFadd{^{t+\Delta t} }\DIFaddend = \rho_{a}\DIFdelbegin \DIFdel{^{n} }\DIFdelend \DIFaddbegin \DIFadd{^{t} }\DIFaddend + \Delta t \; \bigg(\frac{d\rho_{a}}{dt}\bigg)\DIFdelbegin \DIFdel{^{n+\frac{1}{2}}}\DIFdelend \DIFaddbegin \DIFadd{^{t+\frac{1}{2} \Delta t}}\DIFaddend ,
 \end{equation}
 \begin{equation}
   \label{eq:position-update-stage-2}
-  \ten{r}_{a}^{t+\Delta t} = \ten{r}_{a}^{t} + \Delta t \; \ten{u}_{a}^{t+\Delta t}.
+  \ten{r}_{a}\DIFdelbegin \DIFdel{^{n+1} }\DIFdelend \DIFaddbegin \DIFadd{^{t+\Delta t} }\DIFaddend = \ten{r}_{a}\DIFdelbegin \DIFdel{^{n} }\DIFdelend \DIFaddbegin \DIFadd{^{t} }\DIFaddend + \Delta t \; \ten{u}_{a}\DIFdelbegin \DIFdel{^{n+1}}\DIFdelend \DIFaddbegin \DIFadd{^{t+\Delta t}}\DIFaddend .
 \end{equation}
 %
 Finally, at new time-step particle position, the momentum velocity is updated
 \begin{equation}
   \label{eq:velocity-update-stage-3}
-  \ten{u}_a^{t+\Delta t} = \ten{u}_a^{t+\frac{1}{2}\Delta t} + \frac{\Delta t}{2} \bigg(\frac{d\ten{u}_{a}}{dt}\bigg)^{t+\Delta t}.
+  \ten{u}_a\DIFdelbegin \DIFdel{^{n+1} }\DIFdelend \DIFaddbegin \DIFadd{^{t+\Delta t} }\DIFaddend = \ten{u}_a\DIFdelbegin \DIFdel{^{n+\frac{1}{2}} }\DIFdelend \DIFaddbegin \DIFadd{^{t+\frac{1}{2}\Delta t} }\DIFaddend + \frac{\Delta t}{2} \bigg(\frac{d\ten{u}_{a}}{dt}\bigg)\DIFdelbegin \DIFdel{^{n+1}}\DIFdelend \DIFaddbegin \DIFadd{^{t+\Delta t}}\DIFaddend .
 \end{equation}
 
 
-The modeling of rigid-rigid interaction requires a smaller time step than the
-fluid. We choose the minimum of these two timesteps to move the system forward
+The modeling of rigid-rigid interaction requires \DIFdelbegin \DIFdel{lower }\DIFdelend \DIFaddbegin \DIFadd{a smaller }\DIFaddend time step than the
+fluid. We choose the minimum of \DIFdelbegin \DIFdel{both the }\DIFdelend \DIFaddbegin \DIFadd{these two }\DIFaddend timesteps to move the system forward
 in time. For the numerical stability of fluid, the time step depends on the
-Courant–Friedrichs–Lewy (CFL) condition \cite{monaghan-review:2005} as,
+\DIFdelbegin \DIFdel{CFL condition }\DIFdelend \DIFaddbegin \DIFadd{Courant–Friedrichs–Lewy (CFL) condition \mbox{%DIFAUXCMD
+\cite{monaghan-review:2005} }\hspace{0pt}%DIFAUXCMD
+}\DIFaddend as,
 \begin{equation}
   \label{eq:rfc:time-step-cfl}
   \Delta t_{\text{fluid}} = \mathrm{min} \bigg( 0.25 \; \frac{h}{c + |U|} ,  0.25 \; \frac{h^2}{\nu},  0.25 \; \frac{h^2}{g} \bigg),
 \end{equation}
 where $|U|$ is the maximum velocity magnitude, $c$ is the speed of sound
 typically chosen as $10 |U|$ for fluids in this work. For rigid body, the time
-step is constrained \cite{cundall_discrete_1979} as,
+step is constrained \DIFaddbegin \DIFadd{\mbox{%DIFAUXCMD
+\cite{cundall_discrete_1979} }\hspace{0pt}%DIFAUXCMD
+}\DIFaddend as,
 \begin{equation}
   \label{eq:rfc:time-step-body-force}
   \Delta t_{\text{rb}} \leq \frac{\pi}{50} \sqrt{\frac{m}{k_r}}.
@@ -769,12 +906,12 @@ A minimum timestep is chosen as
 Initially, we validate our fluid solver through the resolution of the
 Poiseuille flow problem. Subsequently, we validate the Discrete Element Method
 (DEM) solver by simulating a normal head-on collision between two spherical
-particles and addressing a particle-wall impact scenario.  We validate the
-coupled SPH-DEM solver through simulations.  These simulations involved
-scenarios like a spherical particle entering a steady tank, a solid object
-falling in a water tank, and the behavior of a floating solid.  Lastly, we
-investigate the mixing behavior of spherical particles under a stirrer,
-examining cases with varying densities and diameters.
+particles and addressing a particle-wall impact scenario. We validate the
+coupled Smoothed Particle Hydrodynamics (SPH)-DEM solver is confirmed through
+simulations involving a spherical particle entering a steady tank and a
+falling solid in a water tank and a floating solid. Lastly, we investigate the
+mixing behavior of spherical particles under a stirrer, examining cases with
+varying densities and diameters.
 
 
 \FloatBarrier%
@@ -805,7 +942,7 @@ $\nu$ is kinematic viscosity ($\frac{\mu}{\rho_0}$). This test case serves to
 validate the no-slip boundary condition of our developed scheme. We use
 numerical parameters such as a viscosity of $0.01$, a particle spacing of
 $\frac{1}{60}$, and set the speed of sound to ten times the maximum velocity
-that the fluid can attain. The simulation runs for a total duration of $50$
+\DIFaddbegin \DIFadd{that }\DIFaddend the fluid can attain. The simulation runs for a total duration of $50$
 seconds.
 
 
@@ -817,8 +954,10 @@ SPH simulation results and the analytical solution in
 \cref{eq:poiseuille_exact_soln}, thus validating our solver.
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=0.7\textwidth]{figures/plane_poiseuille_flow_2D/case_1/comparison.png}
-  \caption{Velocity profile of the Poiseuille flow compared against the
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.4\textwidth]{figures/plane_poiseuille_flow_2D/case_1/comparison.png}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.7\textwidth]{figures/plane_poiseuille_flow_2D/case_1/comparison.png}
+  \DIFaddendFL \caption{Velocity profile of the Poiseuille flow compared against the
     analytical solution at time $t=50$ seconds.}
   \label{fig:poiseuille_soln_graph}
 \end{figure}
@@ -844,14 +983,16 @@ SPH simulation results and the analytical solution in
     head-on collision with equal magnitude of velocity but opposite direction.}
   \label{fig:result:dem_1_schematic}
 \end{figure}
-To validate the Discrete Element Method (DEM) solver, we analyze the normal
-collision between two spherical particles.  In
+To validate the Discrete Element Method (DEM) solver, we analyze the \DIFdelbegin \DIFdel{direct
+}\DIFdelend \DIFaddbegin \DIFadd{normal
+}\DIFaddend collision between two spherical particles.  In
 \cref{fig:result:dem_1_schematic}, the initial setup depicts both particles
 moving towards each other with an initial velocity of $10$
-m\,s\textsuperscript{-1}.  Each particle has a radius of $0.01$ m and is composed
+m\,s\textsuperscript{-1}.  Each \DIFdelbegin \DIFdel{disk }\DIFdelend \DIFaddbegin \DIFadd{particle }\DIFaddend has a radius of $0.01$ m and is composed
 of glass. The glass material has a Young's modulus of $4.8 \times 10^{10}$
-N\,m\textsuperscript{-2}, a Poisson's ratio of $0.2$, and a density of $2,800$
-kg\,m\textsuperscript{-3}.  For the current scenario, we assume there is no
+N\,m\textsuperscript{-2}, a Poisson\DIFaddbegin \DIFadd{'s }\DIFaddend ratio of $0.2$, and a density of \DIFdelbegin \DIFdel{$2800$
+}\DIFdelend \DIFaddbegin \DIFadd{$2,800$
+}\DIFaddend kg\,m\textsuperscript{-3}.  For the current scenario, we assume there is no
 friction among the particles and no gravity acting on the particles.
 \Cref{fig:result:dem_1_force_vs_overlap} depicts the variation of the normal
 force and the amount of overlap, compared to the analytical findings presented
@@ -860,8 +1001,10 @@ implementation closely matches the analytical result, hereby confirming the
 validation of our DEM solver's model for normal contact force.
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=0.8\textwidth]{figures/benchmark_1_ss_colliding_elastic/fn_vs_overlap}
-  \caption{Variation of the normal impact force with overlap of the impacting
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.6\textwidth]{figures/benchmark_1_ss_colliding_elastic/fn_vs_overlap}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.8\textwidth]{figures/benchmark_1_ss_colliding_elastic/fn_vs_overlap}
+  \DIFaddendFL \caption{Variation of the normal impact force with overlap of the impacting
     particles, compared to the analytical result.}
   \label{fig:result:dem_1_force_vs_overlap}
 \end{figure}
@@ -872,26 +1015,36 @@ validation of our DEM solver's model for normal contact force.
 \label{sec:DEM_validation_2_particle_wall_impact}
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=0.6\textwidth]{images/results_dem_2_validation_particle_wall_impact/schematic}
-  \caption{Schematic of a spherical particle impacting a wall
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.4\textwidth]{images/results_dem_2_validation_particle_wall_impact/schematic}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.6\textwidth]{images/results_dem_2_validation_particle_wall_impact/schematic}
+  \DIFaddendFL \caption{Schematic of a spherical particle impacting a wall
     with same magnitude of velocity but different impact angles.}
   \label{fig:result:dem_sw_contact_schematic}
 \end{figure}
 As part of our validation test cases, we consider the collision of a spherical
 particle with wall with different incident angles and a constant velocity in
-magnitude. This test case is useful in testing the tangential interaction
-modeling of our DEM solver.  The current problem was experimentally
-investigated by \citet{kharaz2001experimental}, and is commonly employed by
+magnitude. This test case is \DIFdelbegin \DIFdel{helpful }\DIFdelend \DIFaddbegin \DIFadd{useful }\DIFaddend in testing the tangential \DIFdelbegin \DIFdel{part }\DIFdelend \DIFaddbegin \DIFadd{interaction
+modeling }\DIFaddend of our DEM solver.  The \DIFaddbegin \DIFadd{current problem was experimentally
+investigated by \mbox{%DIFAUXCMD
+\citet{kharaz2001experimental}}\hspace{0pt}%DIFAUXCMD
+, and is commonly employed by
 various DEM solvers to validate their codes, as seen in the work of
-\cite{di2004comparison} and \cite{golshan2023lethe}.  The schematic of the
+\mbox{%DIFAUXCMD
+\cite{di2004comparison} }\hspace{0pt}%DIFAUXCMD
+and \mbox{%DIFAUXCMD
+\cite{golshan2023lethe}}\hspace{0pt}%DIFAUXCMD
+.  The }\DIFaddend schematic of the
 body and wall is shown in \cref{fig:result:dem_sw_contact_schematic}.
-The dimensions and material properties of both the particle and the wall are
-set based on the study of \cite{di2004comparison,kharaz2001experimental}. The
-radius of the impacting particle is $2.5 \times 10^{-3}$ m and is made of aluminium
+The \DIFaddbegin \DIFadd{dimensions and material properties of both the particle and the wall are
+set based on the study of \mbox{%DIFAUXCMD
+\cite{di2004comparison,kharaz2001experimental}}\hspace{0pt}%DIFAUXCMD
+. The
+}\DIFaddend radius of the impacting particle is \DIFdelbegin \DIFdel{$0.0025$ }\DIFdelend \DIFaddbegin \DIFadd{$2.5 \times 10^{-3}$ }\DIFaddend m and is made of aluminium
 oxide. The particle has a Young's modulus of $3.8 \times 10^{11}$
-N\,m\textsuperscript{-2}, a Poisson's ratio of $0.23$, and a density of $4,000$
-kg\,m\textsuperscript{-3}. The wall's Young's modulus is $70\times 10^{9}$
-N\,m\textsuperscript{-2}, with a Poisson's ratio of $0.25$.  The impact velocity
+N\,m\textsuperscript{-2}, a Poisson\DIFaddbegin \DIFadd{'s }\DIFaddend ratio of $0.23$, and a density of \DIFdelbegin \DIFdel{$4000$ }\DIFdelend \DIFaddbegin \DIFadd{$4,000$
+}\DIFaddend kg\,m\textsuperscript{-3}. The wall's Young's modulus is $70\times 10^{9}$
+N\,m\textsuperscript{-2}, with a Poisson\DIFaddbegin \DIFadd{'s }\DIFaddend ratio of $0.25$.  The impact velocity
 has a magnitude of $3.9$ m\,s\textsuperscript{-1}. The coefficient of friction
 between the wall and the particle is $0.092$.
 
@@ -901,11 +1054,14 @@ rebound angular velocity with the incident impact angle, compared to
 experimental data from \citet{kharaz2001experimental}.  The angular velocity
 variation generated by our present implementation closely aligns with the
 experimental data, thereby validating the tangential
-contact model.
+\DIFdelbegin \DIFdel{component of our DEM
+solver's contact force }\DIFdelend \DIFaddbegin \DIFadd{contact }\DIFaddend model.
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=0.6\textwidth]{figures/benchmark_4_sw_colliding_oblique/angle_vs_ang_vel.pdf}
-  \caption{Variation of the rebound angular velocity of the impacting particle
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.4\textwidth]{figures/benchmark_4_sw_colliding_oblique/angle_vs_ang_vel.pdf}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.6\textwidth]{figures/benchmark_4_sw_colliding_oblique/angle_vs_ang_vel.pdf}
+  \DIFaddendFL \caption{Variation of the rebound angular velocity of the impacting particle
     with the incidence angle, compared to the experimental result and Lethe
     DEM solver by \cite{golshan2023lethe}.}
   \label{fig:result:dem_sw_contact_omega_vs_theta}
@@ -924,8 +1080,8 @@ contact model.
 \end{figure}
 
 To validate the rigid-fluid coupling solver, we examine the motion of a
-circular disc descending into a steady hydrostatic tank, considering two
-different densities for the disc. This scenario has been investigated
+circular \DIFdelbegin \DIFdel{cylinder }\DIFdelend \DIFaddbegin \DIFadd{disc }\DIFaddend descending into a steady hydrostatic tank, considering two
+different densities for the \DIFdelbegin \DIFdel{cylinder}\DIFdelend \DIFaddbegin \DIFadd{disc}\DIFaddend . This scenario has been investigated
 experimentally by
 \citet{greenhow1983nonlinear} and
 numerically by various studies, including
@@ -934,11 +1090,12 @@ and \cite{sun2018accurate} employing the $\delta^+$-SPH technique.
 \Cref{fig:results_rfc_01_skillen_2013}
 illustrates the initial setup, with the cylinder positioned $0.5$ meters from
 the free surface. The cylinder's radius is $0.11$ meters, and we investigate
-cases with densities of $500$ and $1000$ kg\,m\textsuperscript{-3}.
+cases with densities of $500$ and $1000$ kg\DIFdelbegin \DIFdel{,}\DIFdelend \DIFaddbegin \DIFadd{\,}\DIFaddend m\textsuperscript{-3}.
 The cylinder descends due to gravity into the tank. We perform tests using
 three different spacings to assess convergence: resolving the cylinder
-diameter into 20, 50, and 80 particles, resulting in spacings of $5.5 \times 10^{-3}$ m,
-$2.2 \times 10^{-3}$ m, and $1.375 \times 10^{-3}$ m respectively. We employ a kinematic viscosity of
+diameter into 20, 50, and 80 particles, resulting in spacings of \DIFdelbegin \DIFdel{$0.0055$ m,
+$0.0022$ }\DIFdelend \DIFaddbegin \DIFadd{$5.5 \times 10^{-3}$ m,
+$2.2 \times 10^{-3}$ }\DIFaddend m, and \DIFdelbegin \DIFdel{$0.001375$ }\DIFdelend \DIFaddbegin \DIFadd{$1.375 \times 10^{-3}$ }\DIFaddend m respectively. We employ a kinematic viscosity of
 $1 \times 10^{-6}$ m\textsuperscript{2}/s for water and do not utilize artificial
 viscosity in this case. The simulation runs for a total time of $0.16$
 seconds, utilizing a smoothing length (h) equal to the particle spacing in
@@ -951,7 +1108,7 @@ depth of penetration of the cylinder, compared against the experimental result
 by \citet{greenhow1983nonlinear}, numerical techniques of boundary element
 method (BEM)(\cite{sun2006water}) and delta-plus SPH
 (\cite{sun2018accurate}). From \cref{fig:result_rfc_01_result_displacement},
-we find that the current numerical results matches well with the experimental result as
+we find that the current \DIFdelbegin \DIFdel{solver }\DIFdelend \DIFaddbegin \DIFadd{numerical results }\DIFaddend matches well with the experimental result as
 well as the numerical studies and also converges while increasing the
 resolution.
 \begin{figure}[!htpb]
@@ -973,7 +1130,7 @@ resolution.
 
 
 \FloatBarrier%
-\subsection{RFC validation 2: A 3D cube falling in water}
+\subsection{RFC validation 2: \DIFdelbegin \DIFdel{Falling solid }\DIFdelend \DIFaddbegin \DIFadd{A 3D cube falling }\DIFaddend in water}
 \label{sec:rfc_validation_2_falling_solid_in_water}
 
 The current test case involves falling of a solid cube in a calm water
@@ -981,18 +1138,22 @@ tank. The position of the cube is compared with the
 experimental\cite{wu2014two} result for the validation of the current SPH-DEM
 solver. This problem has been used as a standard benchmark in validating
 several other numberical techniques, such as in VOF-DEM solver
-\cite{nan2022cfd} and other SPH-DEM solvers \cite{qiu20173d}. The cube has a
+\DIFdelbegin \DIFdel{of
+}\DIFdelend \cite{nan2022cfd} and other SPH-DEM solvers \cite{qiu20173d}. The cube has a
 side length of $20$ mm. While the dimentions of the water tank is 150 mm
 $\times$ 140 mm $\times$ 140 mm. While the water depth is taken as $131$ mm. The density
-of the water is taken as $1000$ kg\,m\textsuperscript{-3}, and the density of
-the cube is $2,120$ kg\,m\textsuperscript{-3}. The schemtic of the initial
-configuration is shown in \cref{fig:results_rfc_02_falling}. We show that the
+of the water is taken as $1000$ kg\DIFdelbegin \DIFdel{,}\DIFdelend \DIFaddbegin \DIFadd{\,}\DIFaddend m\textsuperscript{-3}, and the density of
+the cube is \DIFdelbegin \DIFdel{$2120$ kg,}\DIFdelend \DIFaddbegin \DIFadd{$2,120$ kg\,}\DIFaddend m\textsuperscript{-3}. The schemtic of the initial
+configuration is shown in \cref{fig:results_rfc_02_falling}. \DIFdelbegin \DIFdel{The tank and the
+fluid has $150$ mm x-direction, out of the plane which is not shown in the
+schematic. }\DIFdelend We show that the
 current solver can handle 3D problems with this test case.
 \begin{figure}[!htpb]
   \centering
   \includegraphics[width=0.4\textwidth]{images/rfc_02_falling_solid_in_water/schematic}
-  \caption{Schematic of a cube of density $2,120 kg\,m\textsuperscript{-3}$
-    immersed half way in a steady hydrostatic tank is allowed to settle under
+  \caption{Schematic of a cube of density \DIFdelbeginFL \DIFdelFL{$2120 kg,m\textsuperscript{-3}$
+    }\DIFdelendFL \DIFaddbeginFL \DIFaddFL{$2,120 kg\,m\textsuperscript{-3}$
+    }\DIFaddendFL immersed half way in a steady hydrostatic tank is allowed to settle under
     gravity.}
   \label{fig:results_rfc_02_falling}
 \end{figure}
@@ -1007,8 +1168,10 @@ the experimental findings, affirming its capability to handle fluid-solid
 coupling problems efficiently.
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=0.6\textwidth]{figures/wu_2014_falling_solid_3d/z_vs_t}
-  \caption{Vertical position variation of the center of mass of the cube with
+  \DIFdelbeginFL %DIFDELCMD < \includegraphics[width=0.4\textwidth]{figures/wu_2014_falling_solid/y_vs_t}
+%DIFDELCMD <   %%%
+\DIFdelendFL \DIFaddbeginFL \includegraphics[width=0.6\textwidth]{figures/wu_2014_falling_solid_3d/z_vs_t}
+  \DIFaddendFL \caption{Vertical position variation of the center of mass of the cube with
     time, compared against the experimental result by \citet{wu2014two}.}
   \label{fig:results_rfc_02_y_vs_t}
 \end{figure}
@@ -1041,155 +1204,77 @@ coupling problems efficiently.
 \FloatBarrier%
 \subsection{Mixing of spherical particles in a fluid tank}
 \label{sec:mixing-spherical-particles-in-fluid-tank}
-In this section we study the particle dispersion in a tank with varied stirrer
-velocities. Radius of each particle is taken as $0.05$ m, with total no of
-bodies of $54$.  The length and height of the fluid in the tank is taken as
-$3$ m and $1.5$ m. The stirrer height is $0.75$ m, which is immersed half into
-the fluid and placed in the left, and the length of the stirrer being $0.1$ m.
-We allow the particles to settle for $1$ second, and let the stirrer oscillate
-through out the fluid length with different stirrer speed and evaluate the
-mixing characteristics of the particles inside the fluid. The schematic of the
-figure is given in \Cref{fig:schematic-Dinesh-mixer}. The Young's modulus of
-the solid particles is taken as $10^{9}$ \todoin{units} and a Poisson's ration
-of $0.23$ and a density of $1050$ is considered.
+\DIFaddbegin \DIFadd{In this section we study the particle dispersion in a tank with varied stirrer
+velocities.
+}
 
-\begin{figure}[!htpb]
-  \centering
-  \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time1}
-  \caption{Schematic of a mixer}\label{fig:schematic-Dinesh-mixer}
-\end{figure}
 
 \begin{figure}[!htpb]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-1-a}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_1/time1}
+    \subcaption{\DIFaddFL{t = $0$ ms}}\label{fig:rings:ipst-nu-0.47-1}
   \end{subfigure}
-  %
+  %DIF > 
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-1-b}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_1/time1}
+    \subcaption{\DIFaddFL{t = $1.38$ ms}}\label{fig:rings:ipst-nu-0.47-2}
   \end{subfigure}
 
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-1-c}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_1/time3}
+    \subcaption{\DIFaddFL{t = $5.17$ ms}}\label{fig:rings:ipst-nu-0.47-3}
   \end{subfigure}
-%
+%DIF > 
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-1-d}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_1/time0}
+    \subcaption{\DIFaddFL{t = $7.38$ ms}}\label{fig:rings:ipst-nu-0.47-4}
   \end{subfigure}
   \caption{}
-\label{fig:1-mixing-1}
+\label{fig:rings:new-ipst-nu-0-47}
 \end{figure}
-
 
 
 \begin{figure}[!htpb]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-2-a}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_2/time1}
+    \subcaption{\DIFaddFL{t = $0$ ms}}\label{fig:rings:ipst-nu-0.47-1}
   \end{subfigure}
-  %
+  %DIF > 
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-2-b}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_2/time1}
+    \subcaption{\DIFaddFL{t = $1.38$ ms}}\label{fig:rings:ipst-nu-0.47-2}
   \end{subfigure}
 
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-2-c}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_2/time3}
+    \subcaption{\DIFaddFL{t = $5.17$ ms}}\label{fig:rings:ipst-nu-0.47-3}
   \end{subfigure}
-%
+%DIF > 
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-2-d}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_2d/case_2/time0}
+    \subcaption{\DIFaddFL{t = $7.38$ ms}}\label{fig:rings:ipst-nu-0.47-4}
   \end{subfigure}
-  \caption{}
-\label{fig:1-mixing-2}
+  \caption{\DIFaddFL{Snapshots of particle positions with color indicating the stress
+    field ($\sigma_{xx}$) solved by the current solver.}}
+\label{fig:rings:new-ipst-nu-0-47}
 \end{figure}
+\DIFaddend 
 
 
 \FloatBarrier%
 \subsection{Mixing of spherical particles of variable size in a fluid tank}
 \label{sec:mixing-spherical-particles-in-fluid-tank}
 
-
-\begin{figure}[!htpb]
-  \centering
-  \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time1}
-  \caption{Schematic of a mixer}\label{fig:schematic-Dinesh-mixer}
-\end{figure}
-
-\begin{figure}[!htpb]
-  \centering
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-1-a}
-  \end{subfigure}
-  %
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-1-b}
-  \end{subfigure}
-
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-1-c}
-  \end{subfigure}
-%
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-1-d}
-  \end{subfigure}
-  \caption{}
-\label{fig:1-mixing-1}
-\end{figure}
-
-
-
-\begin{figure}[!htpb]
-  \centering
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-2-a}
-  \end{subfigure}
-  %
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-2-b}
-  \end{subfigure}
-
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-2-c}
-  \end{subfigure}
-%
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-2-d}
-  \end{subfigure}
-  \caption{}
-\label{fig:1-mixing-2}
-\end{figure}
 
 % \FloatBarrier%
 % \subsection{Mixing of spherical particles in a fluid tank with turbine impeller}
@@ -1203,13 +1288,6 @@ of $0.23$ and a density of $1050$ is considered.
 \FloatBarrier%
 \section{Conclusions}
 \label{sec:conclusions}
-
-
-
-
-Influence of the cohesion among the particles on the mixing behaviour among
-the particles can be studied as a furture work. Mixing behaviour with
-different densities and different radius in place can be studied.
 
 
 % \section*{References}

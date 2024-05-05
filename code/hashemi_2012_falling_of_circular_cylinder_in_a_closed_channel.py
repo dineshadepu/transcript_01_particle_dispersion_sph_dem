@@ -21,6 +21,7 @@ from pysph.tools.geometry import get_2d_tank, get_2d_block
 from pysph.tools.geometry import get_3d_sphere
 import pysph.tools.geometry as G
 from pysph.base.utils import get_particle_array
+from pysph.examples.solid_mech.impact import add_properties
 
 from pysph.examples import cavity as LDC
 from pysph.sph.equation import Equation, Group
@@ -39,7 +40,7 @@ from pysph_dem.rigid_body.boundary_particles import (add_boundary_identification
 from pysph_rfc_new.geometry import hydrostatic_tank_2d, create_circle_1, translate_system_with_left_corner_as_origin
 # from geometry import hydrostatic_tank_2d, create_circle_1
 
-from sph_dem.rigid_fluid_coupling import (
+from vcpm_sph_coupling.rigid_fluid_coupling import (
     ParticlesFluidScheme, add_rigid_fluid_properties_to_rigid_body)
 
 from sph_dem.rigid_body.rigid_body_3d import (setup_rigid_body,
@@ -98,7 +99,7 @@ class Problem(Application):
                            help="Number of particles in diamter of a rigid cylinder")
 
         group.add_argument("--rigid-body-rho", action="store", type=float,
-                           dest="rigid_body_rho", default=1500,
+                           dest="rigid_body_rho", default=1250,
                            help="Density of rigid cylinder")
 
         group.add_argument("--rigid-body-diameter", action="store", type=float,
@@ -129,14 +130,14 @@ class Problem(Application):
         # ======================
         # dimensions rigid body dimensions
         # All the particles are in circular or spherical shape
-        self.rigid_body_diameter = 0.00125
+        self.rigid_body_diameter = 0.00125 * 2.
         self.rigid_body_velocity = 0.
         self.no_of_layers = self.options.no_of_layers
         self.no_of_bodies = 3 * 6 * self.options.no_of_layers
 
         # x - axis
         self.fluid_length = 0.02
-        self.fluid_length = 0.01
+        # self.fluid_length = 0.005
         # y - axis
         self.fluid_height = 0.06
         # z - axis
@@ -193,10 +194,14 @@ class Problem(Application):
         print("With delta as in hashemi 2012 paper 1 / 15000.", 1 / 15000., "the dx value is same.")
         self.h = self.hdx * self.dx
         self.vref = np.sqrt(2. * abs(self.gy) * self.fluid_height)
-        self.c0 = 10 * self.vref
+        # self.c0 = 10 * self.vref
+        # this is set as per the paper
+        self.c0 = 1.
+        print("sound speed c0 is", self.c0)
         self.mach_no = self.vref / self.c0
         self.nu = 0.0
-        self.tf = 0.8
+        self.wall_time = 0.3
+        self.tf = 0.8 + self.wall_time
         # self.tf = 0.56 - 0.3192
         self.p0 = self.fluid_rho*self.c0**2
         self.alpha = 0.00
@@ -211,7 +216,7 @@ class Problem(Application):
 
         self.dt = min(dt_cfl, dt_force)
         print("Computed stable dt is: ", self.dt)
-        self.dt = 1e-5
+        # self.dt = 1e-5
         # ==========================
         # Numerical properties ends
         # ==========================
@@ -342,16 +347,18 @@ class Problem(Application):
         rigid_body_combined = self.create_rb_geometry_particle_array()
         rigid_body_extent = max(rigid_body_combined.x) - min(rigid_body_combined.x)
         rigid_body_combined.x[:] -= min(rigid_body_combined.x) - min(fluid.x)
-        rigid_body_combined.x[:] += self.rigid_body_diameter
-        rigid_body_combined.x[:] += rigid_body_extent / 2.
+        # rigid_body_combined.x[:] += self.rigid_body_diameter
+        rigid_body_combined.x[:] += self.fluid_length / 2. - self.rigid_body_diameter / 2.
+        # rigid_body_combined.x[:] += rigid_body_extent / 2.
         # move it to right, so that we can have a separate view
-        disp_x = 0.
-        rigid_body_combined.x[:] += disp_x
-        rigid_body_combined.y[:] += self.rigid_body_diameter * 1.
+        rigid_body_combined.y[:] += max(fluid.y) - max(rigid_body_combined.y)
+        disp_y = 2 * 1e-2 - self.rigid_body_diameter * 0.5
+        rigid_body_combined.y[:] -= disp_y
 
         # This is # 2, (Here we create a rigid body which is compatible with
         # combined rigid body solver formulation)
         setup_rigid_body(rigid_body_combined, self.dim)
+        rigid_body_combined.total_mass[:] = np.pi * (self.rigid_body_diameter/2)**2. * self.rigid_body_rho
         rigid_body_combined.h[:] = self.h
         rigid_body_combined.rad_s[:] = self.dx / 2.
 
@@ -400,7 +407,7 @@ class Problem(Application):
                       max(tank.x) - self.tank_layers * self.dx,
                       max(tank.x) / 2
                      ])
-        x[:] += disp_x
+        # x[:] += disp_x
         y = np.array([max(tank.y) / 2.,
                       max(tank.y) / 2.,
                       min(tank.y) + self.tank_layers * self.dx
@@ -445,6 +452,12 @@ class Problem(Application):
             fluid, stirrer, self.dx, dim=self.dim
         )
 
+        # Add properties to rigid body to hold the body still until some time
+        add_properties(rigid_body_master, 'hold_x', 'hold_y', 'hold_z')
+        rigid_body_master.hold_x[:] = rigid_body_master.x[:]
+        rigid_body_master.hold_y[:] = rigid_body_master.y[:]
+        rigid_body_master.hold_z[:] = rigid_body_master.z[:]
+
         return [fluid, tank, rigid_body_master, rigid_body_slave,
                 rigid_body_wall]
 
@@ -478,7 +491,6 @@ class Problem(Application):
             h=self.h,
             c0=self.c0,
             pb=self.p0,
-            nu=self.nu,
             gy=self.gy)
 
         scheme.configure_solver(tf=tf, dt=self.dt, pfreq=200)
@@ -511,6 +523,20 @@ class Problem(Application):
                     pa.u[:] = -self.stirrer_velocity
                     pa.x[:] += pa.u[:] * dt
 
+            if pa.name == 'rigid_body_combined_master':
+                if t < self.wall_time:
+                    pa.x[:] = pa.hold_x[:]
+                    pa.y[:] = pa.hold_y[:]
+                    pa.z[:] = pa.hold_z[:]
+
+                    pa.u[:] = 0.
+                    pa.v[:] = 0.
+                    pa.w[:] = 0.
+
+                    pa.omega_x[:] = 0.
+                    pa.omega_y[:] = 0.
+                    pa.omega_z[:] = 0.
+
     def customize_output(self):
         self._mayavi_config('''
         # b = particle_arrays['rigid_body']
@@ -532,24 +558,29 @@ class Problem(Application):
         # initial position of the cylinder
         fname = files[0]
         data = load(fname)
-        rigid_body = data['arrays']['rigid_body_master']
+        rigid_body = data['arrays']['rigid_body_combined_master']
         y_0 = rigid_body.x[0]
 
+        t = []
         y = []
         v = []
-        u = []
-        t = []
-        fy = []
 
-        for sd, rigid_body in iter_output(files, 'rigid_body_master'):
+        force_p_magn = []
+        force_v_magn = []
+
+        for sd, rigid_body, rb_slave, fluid in iter_output(files, 'rigid_body_combined_master', 'rigid_body_combined_slave', 'fluid'):
             _t = sd['t']
+            if _t > self.wall_time:
             # y.append(rigid_body.xcm[1])
             # u.append(rigid_body.vcm[0])
             # v.append(rigid_body.vcm[1])
-            fy.append(rigid_body.v[0])
-            t.append(_t)
-        print(fy)
-        print(t, "t is ")
+                y.append(rigid_body.y[0])
+                v.append(rigid_body.v[0])
+                t.append(_t)
+
+                force_p_magn.append(np.sum(rb_slave.fx_p[:]**2. + rb_slave.fy_p[:]**2. + rb_slave.fz_p[:]**2.)**0.5)
+                force_v_magn.append(np.sum(rb_slave.fx_v[:]**2. + rb_slave.fy_v[:]**2. + rb_slave.fz_v[:]**2.)**0.5)
+        # print(t, "t is ")
         # non dimentionalize it
         # penetration_current = (np.asarray(y)[::1] - y_0) / self.rigid_body_diameter
         # t_current = np.asarray(t)[::1] * (9.81 / self.rigid_body_diameter)**0.5
@@ -558,26 +589,22 @@ class Problem(Application):
         path = os.path.abspath(__file__)
         directory = os.path.dirname(path)
 
-        # # load the data
-        # # We use Sun 2018 accurate and efficient water entry paper data for validation
-        # if self.rigid_body_rho == 500.:
-        #     data_y_penetration_sun_2018_exp = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_experimental_data.csv'), delimiter=',')
-        #     data_y_penetration_sun_2018_BEM = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_BEM_data.csv'), delimiter=',')
-        #     # This is 200 resolution D / dx = 200
-        #     data_y_penetration_sun_2018_SPH = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_500_rho_SPH_data.csv'), delimiter=',')
-        # if self.rigid_body_rho == 1000.:
-        #     data_y_penetration_sun_2018_exp = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_experimental_data.csv'), delimiter=',')
-        #     data_y_penetration_sun_2018_BEM = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_BEM_data.csv'), delimiter=',')
-        #     # This is 200 resolution D / dx = 200
-        #     data_y_penetration_sun_2018_SPH = np.loadtxt(os.path.join(
-        #         directory, 'sun_2018_falling_1000_rho_SPH_data.csv'), delimiter=',')
+        # load the data
+        # We use Zhang 2019 FPM PST data as given in VCPM-SPH-DEM coupling paper
+        data_vertical_postion_zhang_2019_FPM_PST = np.loadtxt(os.path.join(
+            directory, 'hashemi_2012_falling_of_circular_cylinder_in_a_closed_channel_Zhang_2019_FPM_PST_y_vs_t.csv'), delimiter=',')
 
-        # t_exp, penetration_exp = data_y_penetration_sun_2018_exp[:, 0], data_y_penetration_sun_2018_exp[:, 1]
+        data_velocity_hashemi_2012_SPH = np.loadtxt(os.path.join(
+            directory, 'hashemi_2012_falling_of_circular_cylinder_in_a_closed_channel_Hashemi_2012_velocity_vs_t.csv'), delimiter=',')
+
+        t_zhang_FPM_PST, vertical_position_zhang_FPM_PST = data_vertical_postion_zhang_2019_FPM_PST[:, 0], data_vertical_postion_zhang_2019_FPM_PST[:, 1]
+        t_hashemi_sph, velocity_hashemi_SPH = data_velocity_hashemi_2012_SPH[:, 0], data_velocity_hashemi_2012_SPH[:, 1]
+
+        # We use Sun 2018 accurate and efficient water entry paper data for validation
+        # data_y_position_wu_2014_exp = np.loadtxt(os.path.join(
+        #     directory, 'wu_2014_falling_solid_y_position_exp_data.csv'), delimiter=',')
+
+        # t_exp, y_position_exp = data_y_position_wu_2014_exp[:, 0], data_y_position_wu_2014_exp[:, 1]
         # t_BEM, penetration_BEM = data_y_penetration_sun_2018_BEM[:, 0], data_y_penetration_sun_2018_BEM[:, 1]
         # t_SPH, penetration_SPH = data_y_penetration_sun_2018_SPH[:, 0], data_y_penetration_sun_2018_SPH[:, 1]
         # # =================
@@ -596,39 +623,107 @@ class Problem(Application):
         # # sort webplot data
         # # =================
 
-        # res = os.path.join(self.output_dir, "results.npz")
-        # np.savez(res,
-        #          t_exp=t_exp,
-        #          penetration_exp=penetration_exp,
-        #          t_BEM=t_BEM,
-        #          penetration_BEM=penetration_BEM,
-        #          t_SPH=t_SPH,
-        #          penetration_SPH=penetration_SPH,
-        #          t_current=t_current,
-        #          penetration_current=-penetration_current)
-        # data = np.load(res)
+        res = os.path.join(self.output_dir, "results.npz")
+        np.savez(res,
+                 t_zhang_FPM_PST=t_zhang_FPM_PST,
+                 vertical_position_zhang_FPM_PST=vertical_position_zhang_FPM_PST,
+                 t_hashemi_sph=t_hashemi_sph,
+                 velocity_hashemi_SPH=velocity_hashemi_SPH,
+                 t_current=t,
+                 y_position_current=y,
+                 v_velocity_current=v,
+                 )
+        data = np.load(res)
 
         # ========================
         # Variation of y penetration
         # ========================
         plt.clf()
-        # plt.plot(t_exp, penetration_exp, "^", label='Experimental')
         # plt.plot(t_SPH, penetration_SPH, "-+", label='SPH')
         # plt.plot(t_BEM, penetration_BEM, "--", label='BEM')
         # plt.plot(t_current, -penetration_current, "-", label='Current')
-        print("len of t is", len(t))
-        print("len of v is", len(fy))
-        plt.plot(t, fy)
+        # print("len of t is", len(t))
+        # print("len of v is", len(fy))
+        plt.plot(t, y, label='Current')
+        plt.plot(t_zhang_FPM_PST, vertical_position_zhang_FPM_PST, "^", label='Zhang et al. 2019, FPM-PST')
 
-        plt.title('Variation in y-penetration')
-        plt.xlabel('t (g / D)^{1/2}')
-        plt.ylabel('force')
+        plt.title('Variation in y-position (meters)')
+        plt.xlabel('Time (seconds)')
+        plt.ylabel('Vertical displacement (m)')
         plt.legend()
-        fig = os.path.join(os.path.dirname(fname), "penetration_vs_t.png")
+        fig = os.path.join(os.path.dirname(fname), "y_vs_t.png")
         plt.savefig(fig, dpi=300)
         # ========================
-        # x amplitude figure
+        # y amplitude figure
         # ========================
+
+        # ========================
+        # Variation of y velocity
+        # ========================
+        plt.clf()
+        # plt.plot(t_SPH, penetration_SPH, "-+", label='SPH')
+        # plt.plot(t_BEM, penetration_BEM, "--", label='BEM')
+        # plt.plot(t_current, -penetration_current, "-", label='Current')
+        # print("len of t is", len(t))
+        # print("len of v is", len(fy))
+        plt.plot(t, v, label='Current')
+        plt.plot(t_hashemi_sph, velocity_hashemi_SPH, "^", label='Hashemi et al. 2012, SPH')
+
+        plt.title('Variation in y-position (meters)')
+        plt.xlabel('Time (seconds)')
+        plt.ylabel('Vertical displacement (m)')
+        plt.legend()
+        fig = os.path.join(os.path.dirname(fname), "v_vs_t.png")
+        plt.savefig(fig, dpi=300)
+        # ========================
+        # y amplitude figure
+        # ========================
+
+        # # ========================
+        # # Variation of force due to fluid
+        # # ========================
+        # plt.clf()
+        # # plt.plot(t_SPH, penetration_SPH, "-+", label='SPH')
+        # # plt.plot(t_BEM, penetration_BEM, "--", label='BEM')
+        # # plt.plot(t_current, -penetration_current, "-", label='Current')
+        # # print("len of t is", len(t))
+        # # print("len of v is", len(fy))
+        # plt.plot(t, force_p_magn, label='Pressure force')
+        # plt.plot(t, force_v_magn, label='Viscous')
+        # plt.plot(t, np.asarray(force_p_magn)/np.asarray(force_v_magn), label='Ratio')
+
+        # plt.title('Variation in force')
+        # plt.xlabel('Time (seconds)')
+        # plt.ylabel('Force')
+        # plt.legend()
+        # fig = os.path.join(os.path.dirname(fname), "force_vs_t.png")
+        # plt.savefig(fig, dpi=300)
+        # # ========================
+        # # x amplitude figure
+        # # ========================
+
+        # # ========================
+        # # Variation of force due to fluid
+        # # ========================
+        # plt.clf()
+        # # plt.plot(t_SPH, penetration_SPH, "-+", label='SPH')
+        # # plt.plot(t_BEM, penetration_BEM, "--", label='BEM')
+        # # plt.plot(t_current, -penetration_current, "-", label='Current')
+        # # print("len of t is", len(t))
+        # # print("len of v is", len(fy))
+        # # plt.plot(t, force_p_magn, label='Pressure force')
+        # plt.plot(t, force_v_magn, label='Viscous')
+        # # plt.plot(t, force_p_magn/force_v_magn, label='Ratio')
+
+        # plt.title('Variation in viscous force')
+        # plt.xlabel('Time (seconds)')
+        # plt.ylabel('Force')
+        # plt.legend()
+        # fig = os.path.join(os.path.dirname(fname), "visc_vs_t.png")
+        # plt.savefig(fig, dpi=300)
+        # # ========================
+        # # x amplitude figure
+        # # ========================
 
 
 if __name__ == '__main__':

@@ -617,6 +617,131 @@ class Zhang2009SolidFluidMixtureVerification2d(Problem):
                     shutil.copy(os.path.join(source, file_name), target_dir)
 
 
+class Dinesh2024MixingWithStirrerHomogeneous2d(Problem):
+    """
+
+    Own example
+    """
+    def get_name(self):
+        return 'dinesh_2024_mixing_with_stirrer_homogeneous_2d'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/dinesh_2024_mixing_with_stirrer_2d.py' + backend
+
+        # kinetic viscosity
+        # Base case info
+        self.case_info = {
+            'case_1': (dict(
+                stirrer_velocity=1.
+                ), 'Case 1'),
+
+            'case_2': (dict(
+                stirrer_velocity=3.
+                ), 'Case 2'),
+
+            'case_3': (dict(
+                stirrer_velocity=5.
+                ), 'Case 3'),
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        for name in self.case_info:
+            source = self.input_path(name)
+
+            target_dir = "manuscript/figures/" + source[8:] + "/"
+            os.makedirs(target_dir)
+            # print(target_dir)
+
+            file_names = os.listdir(source)
+
+            for file_name in file_names:
+                # print(file_name)
+                if file_name.endswith((".jpg", ".pdf", ".png")):
+                    # print(target_dir)
+                    shutil.copy(os.path.join(source, file_name), target_dir)
+
+
+class Dinesh2024MixingWithStirrerInHomogeneous2d(Problem):
+    """
+
+    Own example
+    """
+    def get_name(self):
+        return 'dinesh_2024_mixing_with_stirrer_inhomogeneous_2d'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/dinesh_2024_mixing_with_stirrer_2d.py' + backend
+
+        # kinetic viscosity
+        # Base case info
+        self.case_info = {
+            'case_1': (dict(
+                stirrer_velocity=1.,
+                radius_ratio=1.2,
+                ), 'Case 1'),
+
+            'case_2': (dict(
+                stirrer_velocity=3.,
+                radius_ratio=1.2,
+                ), 'Case 2'),
+
+            # 'case_3': (dict(
+            #     stirrer_velocity=5.,
+            #     radius_ratio=1.5,
+            #     ), 'Case 3'),
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        for name in self.case_info:
+            source = self.input_path(name)
+
+            target_dir = "manuscript/figures/" + source[8:] + "/"
+            os.makedirs(target_dir)
+            # print(target_dir)
+
+            file_names = os.listdir(source)
+
+            for file_name in file_names:
+                # print(file_name)
+                if file_name.endswith((".jpg", ".pdf", ".png")):
+                    # print(target_dir)
+                    shutil.copy(os.path.join(source, file_name), target_dir)
+
+
 class RFCTesting1(Problem):
     """We will allow a circular particle to settle in a tank with different
     viscosity coefficients and check the deviatioinn in the settling time
@@ -717,6 +842,119 @@ class RFCTesting1(Problem):
                     shutil.copy(os.path.join(source, file_name), target_dir)
 
 
+class Hashemi2012FallingCircularCylinder(Problem):
+    """We will allow a circular particle to settle in a tank with different
+    viscosity coefficients and check the deviatioinn in the settling time
+    """
+    def get_name(self):
+        return 'hashemi_2012_falling_of_circular_cylinder_in_a_closed_channel'
+
+    def setup(self):
+        get_path = self.input_path
+
+        cmd = 'python code/hashemi_2012_falling_of_circular_cylinder_in_a_closed_channel.py' + backend
+
+        # kinetic viscosity
+        # Base case info
+        self.case_info = {
+            'N_10': (dict(
+                N=10,
+                nu=1e-2,
+                ), 'N=10'),
+
+            'N_8': (dict(
+                N=8,
+                nu=1e-2,
+                ), 'N=8'),
+        }
+
+        self.cases = [
+            Simulation(get_path(name), cmd,
+                       job_info=dict(n_core=n_core,
+                                     n_thread=n_thread), cache_nnps=None,
+                       **scheme_opts(self.case_info[name][0]))
+            for name in self.case_info
+        ]
+
+    def run(self):
+        self.make_output_dir()
+        self.move_figures()
+        self.plot_displacement()
+
+    def plot_displacement(self):
+        data = {}
+        for name in self.case_info:
+            data[name] = np.load(self.input_path(name, 'results.npz'))
+
+        rand_case = (list(data.keys())[0])
+
+        t_zhang_FPM_PST = data[rand_case]['t_zhang_FPM_PST']
+        vertical_position_zhang_FPM_PST = data[rand_case]['vertical_position_zhang_FPM_PST']
+        t_hashemi_sph = data[rand_case]['t_hashemi_sph']
+        velocity_hashemi_SPH = data[rand_case]['velocity_hashemi_SPH']
+
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+        plt.plot(t_zhang_FPM_PST, vertical_position_zhang_FPM_PST, "o", label='Zhang et al. 2019 (FPM-PST)')
+        for name in self.case_info:
+            t_current = data[name]['t_current']
+            z_current = data[name]['y_position_current']
+
+            plt.plot(t_current, z_current, label="Current " + str(self.case_info[name][1]))
+
+        plt.xlabel('time')
+        plt.ylabel('y - position')
+        plt.legend()
+        # plt.tight_layout(pad=0)
+        plt.savefig(self.output_path('y_vs_t.pdf'))
+        plt.clf()
+        plt.close()
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+        plt.plot(t_hashemi_sph, velocity_hashemi_SPH, "o", label='Hashemi et al. 2012 (SPH)')
+        for name in self.case_info:
+            t_current = data[name]['t_current']
+            z_current = data[name]['v_velocity_current']
+
+            plt.plot(t_current, z_current, label="Current " + str(self.case_info[name][1]))
+
+        plt.xlabel('time')
+        plt.ylabel('Vertical velocity')
+        plt.legend()
+        # plt.tight_layout(pad=0)
+        plt.savefig(self.output_path('v_vs_t.pdf'))
+        plt.clf()
+        plt.close()
+        # ==================================
+        # Plot x amplitude
+        # ==================================
+
+    def move_figures(self):
+        import shutil
+        import os
+
+        for name in self.case_info:
+            source = self.input_path(name)
+
+            target_dir = "manuscript/figures/" + source[8:] + "/"
+            os.makedirs(target_dir)
+            # print(target_dir)
+
+            file_names = os.listdir(source)
+
+            for file_name in file_names:
+                # print(file_name)
+                if file_name.endswith((".jpg", ".pdf", ".png")):
+                    # print(target_dir)
+                    shutil.copy(os.path.join(source, file_name), target_dir)
+
+
 if __name__ == '__main__':
     PROBLEMS = [
         # Image generator
@@ -737,6 +975,15 @@ if __name__ == '__main__':
         # Problem  no 5
         # Zhang 2009 solid-fluid mixture verification
         Zhang2009SolidFluidMixtureVerification2d,
+
+        # Problem  no 5
+        # Own problem
+        Dinesh2024MixingWithStirrerHomogeneous2d,
+        Dinesh2024MixingWithStirrerInHomogeneous2d,
+
+        # Problem  no 6
+        Hashemi2012FallingCircularCylinder,
+
 
         # RFC testing no 1
         RFCTesting1

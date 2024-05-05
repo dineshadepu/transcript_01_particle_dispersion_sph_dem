@@ -1,0 +1,1 @@
+{"fname": "zhang_2009_solid_fluid_mixture_verification_2d", "output_dir": "/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/code/junk", "args": ["--openmp", "--pfreq", "200", "-d", "junk"], "completed": true, "cpu_time": 677.2252643108368}

@@ -106,6 +106,24 @@ class Problem(Application):
                            dest="rigid_body_diameter", default=1e-3,
                            help="Diameter of each particle")
 
+        group.add_argument("--radius-ratio", action="store", type=float,
+                           dest="radius_ratio", default=1.0,
+                           help="Diameter of each particle")
+
+        add_bool_argument(
+            group,
+            'top',
+            dest='top_particle',
+            default=True,
+            help='Make top particle radius bigger')
+
+        add_bool_argument(
+            group,
+            'parallel-arrangement',
+            dest='parallel_arrangement',
+            default=False,
+            help='Make particles next to each other (parallel arrangement)')
+
         add_bool_argument(
             group,
             'follow-combined-rb-solver',
@@ -131,6 +149,9 @@ class Problem(Application):
         # dimensions rigid body dimensions
         # All the particles are in circular or spherical shape
         self.rigid_body_diameter = 0.00125 * 2.
+        self.radius_ratio = self.options.radius_ratio
+        self.top = self.options.top_particle
+        self.parallel = self.options.parallel_arrangement
         self.rigid_body_velocity = 0.
         self.no_of_layers = self.options.no_of_layers
         self.no_of_bodies = 3 * 6 * self.options.no_of_layers
@@ -200,7 +221,7 @@ class Problem(Application):
         print("sound speed c0 is", self.c0)
         self.mach_no = self.vref / self.c0
         self.nu = 0.0
-        self.wall_time = 0.3
+        self.wall_time = 0.0
         self.tf = 0.8 + self.wall_time
         # self.tf = 0.56 - 0.3192
         self.p0 = self.fluid_rho*self.c0**2
@@ -289,13 +310,34 @@ class Problem(Application):
         return rigid_body_combined
 
     def create_rb_geometry_particle_array(self):
-        x1, y1 = create_circle_1(self.rigid_body_diameter, self.dx)
 
-        x2, y2 = create_circle_1(self.rigid_body_diameter, self.dx)
-        y2[:] += self.rigid_body_diameter * 1.5
+        if self.top == True:
+            x1, y1 = create_circle_1(2. * (self.rigid_body_diameter / 2.), self.dx)
+            x2, y2 = create_circle_1(2. * (self.radius_ratio * self.rigid_body_diameter / 2.), self.dx)
+
+            body_id_1 = 0 * np.ones_like(x1, dtype='int')
+            dem_id_1 = 0 * np.ones_like(x1, dtype='int')
+
+            body_id_2 = np.ones_like(x2, dtype='int')
+            dem_id_2 = np.ones_like(x2, dtype='int')
+        else:
+            x1, y1 = create_circle_1(2. * (self.radius_ratio * self.rigid_body_diameter / 2.), self.dx)
+            x2, y2 = create_circle_1(2. * (self.rigid_body_diameter / 2.), self.dx)
+            body_id_1 = 0 * np.ones_like(x1, dtype='int')
+            dem_id_1 = 0 * np.ones_like(x1, dtype='int')
+
+            body_id_2 = np.ones_like(x2, dtype='int')
+            dem_id_2 = np.ones_like(x2, dtype='int')
+
+        if self.parallel is True:
+            x2[:] += self.rigid_body_diameter * 1.5
+        else:
+            y2[:] += self.rigid_body_diameter * 1.5
 
         x = np.concatenate((x1, x2))
         y = np.concatenate((y1, y2))
+        body_id = np.concatenate((body_id_1, body_id_2))
+        dem_id = np.concatenate((dem_id_1, dem_id_2))
 
         z = np.zeros_like(x)
 
@@ -314,14 +356,6 @@ class Problem(Application):
                                                  rho=self.fluid_rho)
 
         x_circle, y_circle = create_circle_1(self.rigid_body_diameter, self.dx)
-
-        body_id = np.array([])
-        dem_id = np.array([])
-        for i in range(2):
-            body_id = np.concatenate((body_id, i * np.ones_like(x_circle,
-                                                                dtype='int')))
-            dem_id = np.concatenate((dem_id, i * np.ones_like(x_circle,
-                                                              dtype='int')))
 
         rigid_body_combined.add_property('body_id', type='int', data=body_id)
         rigid_body_combined.add_property('dem_id', type='int', data=dem_id)
@@ -354,10 +388,25 @@ class Problem(Application):
         disp_y = 2 * 1e-2 - self.rigid_body_diameter * 0.5
         rigid_body_combined.y[:] -= disp_y
 
+        # If we have parallel arrangement
+        if self.parallel:
+            rigid_body_combined.x[:] -= min(rigid_body_combined.x) - min(fluid.x)
+            rigid_body_extent = max(rigid_body_combined.x) - min(rigid_body_combined.x)
+            fluid_extent = max(fluid.x) - min(fluid.x)
+            rigid_body_center_length = rigid_body_extent * 0.5
+            rigid_body_combined.x[:] += (fluid_extent - rigid_body_extent) * 0.5
+
         # This is # 2, (Here we create a rigid body which is compatible with
         # combined rigid body solver formulation)
+        if self.top is True:
+            radius = np.array([(self.rigid_body_diameter / 2.),
+                               (self.radius_ratio * self.rigid_body_diameter / 2.)])
+        else:
+            radius = np.array([(self.radius_ratio * self.rigid_body_diameter / 2.),
+                               (self.rigid_body_diameter / 2.)])
+
         setup_rigid_body(rigid_body_combined, self.dim)
-        rigid_body_combined.total_mass[:] = np.pi * (self.rigid_body_diameter/2)**2. * self.rigid_body_rho
+        rigid_body_combined.total_mass[:] = np.pi * radius[:]**2. * self.rigid_body_rho
         rigid_body_combined.h[:] = self.h
         rigid_body_combined.rad_s[:] = self.dx / 2.
 
@@ -365,7 +414,7 @@ class Problem(Application):
         lin_vel = np.array([])
         ang_vel = np.array([])
         sign = -1
-        for i in range(1):
+        for i in range(2):
             sign *= -1
             lin_vel = np.concatenate((lin_vel, np.array([sign * 0., 0., 0.])))
             ang_vel = np.concatenate((ang_vel, np.array([0., 0., 0.])))
@@ -379,8 +428,8 @@ class Problem(Application):
         )
 
         # This is # 4
-        rigid_body_master.rad_s[:] = self.rigid_body_diameter / 2.
-        rigid_body_master.h[:] = self.h
+        rigid_body_master.rad_s[:] = radius[:]
+        rigid_body_master.h[:] = self.radius_ratio * self.rigid_body_diameter * 0.5
         add_contact_properties_body_master(rigid_body_master, 6, 3)
 
         # This is # 5
@@ -440,16 +489,16 @@ class Problem(Application):
             fluid, rigid_body_slave, self.dx, dim=self.dim
         )
 
-        # Add stirrer
-        stirrer = self.create_stirrer()
-        # set the position of the stirrer
-        stirrer.x[:] += ((min(fluid.x) - min(stirrer.x)) +
-                         self.fluid_length * 0.5) - self.stirrer_length * 0.5
-        # stirrer.x[:] -= self.rigid_body_diameter
-        stirrer.y[:] += max(fluid.y) - min(stirrer.y) + self.rigid_body_diameter * 10
-        G.remove_overlap_particles(
-            fluid, stirrer, self.dx, dim=self.dim
-        )
+        # # Add stirrer
+        # stirrer = self.create_stirrer()
+        # # set the position of the stirrer
+        # stirrer.x[:] += ((min(fluid.x) - min(stirrer.x)) +
+        #                  self.fluid_length * 0.5) - self.stirrer_length * 0.5
+        # # stirrer.x[:] -= self.rigid_body_diameter
+        # stirrer.y[:] += max(fluid.y) - min(stirrer.y) + self.rigid_body_diameter * 10
+        # G.remove_overlap_particles(
+        #     fluid, stirrer, self.dx, dim=self.dim
+        # )
 
         # Add properties to rigid body to hold the body still until some time
         add_properties(rigid_body_master, 'hold_x', 'hold_y', 'hold_z')
@@ -542,6 +591,9 @@ class Problem(Application):
         # b.scalar = 'm'
         b = particle_arrays['fluid']
         b.scalar = 'vmag'
+        b = particle_arrays['rigid_body_combined_slave']
+        b.scalar = 'm'
+        b.plot.module_manager.scalar_lut_manager.lut_mode = 'gist_yarg'
         ''')
 
     def post_process(self, fname):
@@ -575,7 +627,7 @@ class Problem(Application):
             # v.append(rigid_body.vcm[1])
                 y.append(rigid_body.y[0])
                 v.append(rigid_body.v[0])
-                t.append(_t)
+                t.append(_t - self.wall_time)
 
                 force_p_magn.append(np.sum(rb_slave.fx_p[:]**2. + rb_slave.fy_p[:]**2. + rb_slave.fz_p[:]**2.)**0.5)
                 force_v_magn.append(np.sum(rb_slave.fx_v[:]**2. + rb_slave.fy_v[:]**2. + rb_slave.fz_v[:]**2.)**0.5)

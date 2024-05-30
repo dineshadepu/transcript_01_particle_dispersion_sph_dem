@@ -1,4 +1,5 @@
 \documentclass[preprint,12pt]{elsarticle}
+% \documentclass[preprint,12pt,draft]{elsarticle}
 % \documentclass[draft,12pt]{elsarticle}
 
 \usepackage{hyperref}
@@ -40,41 +41,39 @@
 \begin{frontmatter}
 
   \title{{DEM}-{SPH} study of particles dispersion in fluid}
-  \author[XXX]{Dinesh Adepu\corref{cor1}}
+  \author[xxx]{Dinesh Adepu\corref{cor1}}
   \ead{d.dinesh@surrey.ac.uk}
-  \author[University of Surrey]{Chuan Yu Wu}
-  \ead{XXX}
-\address[xxx]{xxx}
+  \author[xxx]{Chuan Yu Wu}
+  % \ead{XXX}
+\address[xxx]{School of Chemistry and Chemical Engineering, University of Surrey}
 
 \cortext[cor1]{Corresponding author}
 
 
 \begin{abstract}
-  \begin{itemize}
-    Mixing powdered substances in tanks using a stirrer is a common occurrence
-    across various industries. Typically, this phenomenon is studied
-    numerically due to the complex nonlinear physics involved. In our current
-    research, we have developed a solver combining Smoothed Particle
-    Hydrodynamics (SPH) and Discrete Element Method (DEM) to investigate the
-    mixing behavior of SPH particles within a tank under the influence of a
-    stirrer operating at different speeds.  The SPH method governs the fluid
-    phase, while the dynamics and interactions of particles are captured by
-    the DEM. We achieve a fully resolved coupling between solid particles and
-    fluid particles by discretizing solid particles into dummy SPH
-    particles. Our validation process includes verifying the fluid solver's
-    accuracy through a Poiseuille problem and validating the DEM solver by
-    benchmarking interactions between two particles and particle-wall impacts.
-    The coupled model's validation extends to various benchmarks, such as
-    simulating single-particle entry in both 2D and 3D configurations,
-    including a cube entering a tank. Following validation, we proceed with
-    the mixing study. We conduct two simulations: one with spherical particles
-    of uniform radius and another with particles having varying radius
-    distributions.  Our findings reveal that as the stirrer speed increases,
-    particles tend to accumulate initially. However, with further increases in
-    stirrer speed, particles mix more effectively, and no particle sticking
-    occurs. We have leveraged an open-source software, adapting and
-    integrating the coupled model to conduct thorough mixing analyses.
-  \end{itemize}
+  Mixing powdered substances in tanks using a stirrer is a common occurrence
+  across various industries. Typically, this phenomenon is studied numerically
+  due to the complex nonlinear physics involved. In our current study, we have
+  developed a solver combining Smoothed Particle Hydrodynamics (SPH) and
+  Discrete Element Method (DEM) to investigate the mixing behavior of rigid
+  circular particles within a tank under the influence of a stirrer operating
+  at different speeds.  The SPH method governs the fluid phase, while the
+  dynamics and interactions of particles are captured by the DEM. We achieve a
+  fully resolved coupling between solid particles and fluid particles by
+  discretizing solid particles into dummy SPH particles. Our validation
+  process includes verifying the fluid solver's accuracy through a Poiseuille
+  problem and validating the DEM solver by benchmarking interactions between
+  two particles and particle-wall impacts.  The coupled model's is validated
+  by simulating single-particle entry in a 2D steady tank and a cube settling
+  in a tank, which is a 3D case. Following validation, we proceed with the
+  mixing study. We conduct two simulations: one with spherical particles of
+  uniform radius and another with particles having two different radius.  Our
+  findings reveal that as for lower stirrer speeds, particles tend to
+  aggregate initially and remain in the center. However, with further increase
+  in stirrer speed, particles tend to accumulate near the tank corners due to
+  the circulation induced in the fluid due to the stirrer motion. We use an
+  open-source software, PySPH, adapting and integrating the coupled model to
+  conduct the current study.
 \end{abstract}
 
 \begin{keyword}
@@ -130,16 +129,18 @@ dynamics.
 
 
 While handling the interaction between the fluid and solid particles, the
-interaction can be categorized into a resolved and unresolved coupling. In
-unresolved coupling, simplified models compute forces acting on solid
-particles within fluid flow, \todoin{while fully resolved coupling computes
-  forces comprehensively}. Both strategies are applicable in both meshless
-\cite{cleary2015prediction, trujillo2020smooth} and mesh-based
-\cite{van2008numerical, ma2022review} CFD-DEM techniques.  In addition to the
-study mono-sized particle behaviour in a fluid \cite{trujillo2020smooth},
-research such as \cite{brosh2014accelerating} and \cite{peng2021fully} explore
-wide particle size distributions with CFD-DEM and SPH-DEM respectively.
-Regarding non-Newtonian fluid modelling in mesh-based schemes, works like
+interaction can be categorized into a resolved and unresolved coupling.  In
+unresolved coupling, simplified models are utilized to calculate the forces
+exerted on solid particles within the fluid flow. In contrast, in the fully
+resolved coupling approach, the fluid forces are directly computed on the
+solid particles without the need for empirical drag force models.  Both
+strategies are applicable in both meshless \cite{cleary2015prediction,
+  trujillo2020smooth} and mesh-based \cite{van2008numerical, ma2022review}
+CFD-DEM techniques.  In addition to the study mono-sized particle behaviour in
+a fluid \cite{trujillo2020smooth}, research such as
+\cite{brosh2014accelerating} and \cite{peng2021fully} explore wide particle
+size distributions with CFD-DEM and SPH-DEM respectively.  Regarding
+non-Newtonian fluid modelling in mesh-based schemes, works like
 \cite{li2018dam} are notable and in meshless schemes, \cite{peng2021fully} is
 notable. \citet{zhu2008discrete} and \citet{ma2022review} delve into
 investigations on spherical and non-spherical particles respectively within
@@ -180,23 +181,22 @@ discussed in papers by \citet{asai2021fluid}, \citet{peng2021fully},
 
 
 
-\todoin{Current research gap}. In the current work we cosider the particle
-dispersion within a large-scale under stirrer mixing phenomenon. We employ
-Smoothed Particle Hydrodynamics (SPH) to model fluid dynamics and the Discrete
-Element Method (DEM) to handle the dynamics and contact interactions among
-spherical particles. The interaction between solids and fluids is modelled
-using a fixed ghost particle approach, ensuring a fully resolved
-simulation. We validate the fluid solver independently using Poiseuille flow
-and the DEM solver separately using fundamental benchmarks such as
-particle-particle and particle-wall impacts. Subsequently, the fully resolved
-coupled SPH-DEM solver is validated using three benchmarks: a single particle
-entering, two particles settling, and a forced wedge entry into a steady
-hydrostatic tank. Upon confirming the fidelity of the solver, we proceed with
-analyzing the mixing behavior of various spherical particles influenced by a
-stirrer in a tank. We investigate scenarios involving particles of different
-densities, stirrer velocities, and variable sizes as part of our case
-study. The development work is conducted using
-PySPH\cite{ramachandran2021pysph}, an open-source code available at
+In the current work we consider the particle dispersion within a large-scale
+under stirrer mixing phenomenon. We employ Smoothed Particle Hydrodynamics
+(SPH) to model fluid dynamics and the Discrete Element Method (DEM) to handle
+the dynamics and contact interactions among spherical particles. The
+interaction between solids and fluids is modelled using a fixed ghost particle
+approach, ensuring a fully resolved simulation. We validate the fluid solver
+independently using Poiseuille flow and the DEM solver separately using
+fundamental benchmarks such as particle-particle and particle-wall
+impacts. Subsequently, the fully resolved coupled SPH-DEM solver is validated
+using three benchmarks: a single particle entering, two particles settling,
+and a forced wedge entry into a steady hydrostatic tank. Upon confirming the
+fidelity of the solver, we proceed with analyzing the mixing behavior of
+various spherical particles influenced by a stirrer in a tank. We investigate
+scenarios involving particles of different densities, stirrer velocities, and
+variable sizes as part of our case study. The development work is conducted
+using PySPH\cite{ramachandran2021pysph}, an open-source code available at
 \url{https://github.com/pypr/pysph}.  We modify the current codebase to
 integrate implementations of the Discrete Element Method (DEM) and the
 Smoothed Particle Hydrodynamics (SPH) coupled with DEM model for our ongoing
@@ -265,7 +265,7 @@ domain is discretized into N particles with mass $m_i$ and volume
 $V_i$, We have
 \begin{equation}
   \label{eq:mass_repr}
-  m_j = V_i \> \rho_i.
+  m_i = V_i \> \rho_i.
 \end{equation}
 Based on this discretization, the discrete function approximation is given as,
 \begin{equation}
@@ -313,8 +313,8 @@ Similarly, the discretized momentum equation is written as,
   \ten{g}_{a},
 \end{multline}
 where $\ten{I}$ is the identity matrix, $\eta$ is the kinematic viscosity of the
-fluid and \todoin{\cite{morris1997modeling}} formulation is used to discretize the
-viscosity term.
+fluid. The viscous term in \Cref{eq:me} is discretized according to the
+formulation introduced in \cite{morris1997modeling}.
 
 We add to the momentum equation an additional artificial viscosity term
 $\Pi_{ab}$~\cite{monaghan-review:2005} to maintain the stability of the
@@ -552,52 +552,56 @@ tangential component. The normal force component represents a repulsive force,
 while the tangential component is used to model the friction between the
 interacting particles.  The normal force ($\teng{F}_a^{n}$) on particle $a$
 due to the interaction with the particles $b$ is given by a non-linear,
-Hetzian model \cite{brilliantov1996model},
+Hetzian model \cite{brilliantov1996model}, including damping is given as,
 \begin{equation}
   \label{eq:contact-algorithm-normal}
-  \ten{F}_a^n = k_n \delta_{n} \ten{n}.
+  \ten{F}_a^n = k_n \delta_{n} \ten{n} - \eta_n (\ten{v}_{ab} \cdot \ten{n}) \ten{n}.
 \end{equation}
-Here, the overlap $\delta_{n}$ is computed using
+Here, $\ten{v}_{ab} = \ten{v}_{a} - \ten{v}_b$ is the relative velocity of
+particle $a$ with respect to the contacting particle $b$,
+$\ten{n}$ normal unit vector passing from particle $b$ to $a$, and the overlap $\delta_{n}$ is computed
+using the radius of particle $a$ ($R_a$) and particle $b$ ($R_b$) as
 \begin{equation}
   \label{eq:cf-overlap}
   \delta_{n} = R_{a} + R_{b} - r_{ab},
 \end{equation}
-$k_r$ is the normal spring stiffness coefficient, which is computed using the
-material properties of the bodies in contact, given by:
+$k_n$ and $\eta_n$ are the normal spring stiffness and damping coefficient, which
+are computed using the material properties of the bodies in contact and the
+coefficient of restitution among the interacting bodies, given by:
 \begin{equation}
   \label{eq:kf-stiffness}
-  k_n = \frac{4}{3} \; E^{*} \; \sqrt{R^{*} \delta_n}
+  k_n = \frac{4}{3} \; E^{*} \; \sqrt{R^{*} \delta_n},
 \end{equation}
 \begin{equation}
   \label{eq:kf-stiffness}
-  k_t = 8 \; G^{*} \; \sqrt{R^{*} \delta_n}
+  \eta_n = -2 \sqrt{\frac{5}{6}} \beta \; \sqrt{S_n m^*}.
 \end{equation}
-
+Where the other parameters are given as:
 \begin{equation}
   \label{eq:kf-stiffness}
-  \eta_n = -2 \sqrt{\frac{5}{6}} \beta \; \sqrt{S_n m^*}
+  \frac{1}{E^{*}} = \frac{1 -\nu_a^2}{E_a} + \frac{1 -\nu_b^2}{E_b}
 \end{equation}
 \begin{equation}
   \label{eq:kf-stiffness}
-  \eta_t = -2 \sqrt{\frac{5}{6}} \beta \; \sqrt{S_t m^*}
+  \beta = \frac{\ln{e}}{\ln{e}^2 + \pi},
 \end{equation}
-
+here, $e$ is the coefficient of restitution.
+\begin{equation}
+  \label{eq:kf-stiffness}
+  R^{*} = \frac{R_a R_b}{R_a + R_b}
+\end{equation}
+\begin{equation}
+  \label{eq:kf-stiffness}
+  m^{*} = \frac{m_a m_b}{m_a + m_b}
+\end{equation}
 \begin{equation}
   \label{eq:kf-stiffness}
   S_n = 2 E^{*} \sqrt{R^{*} \delta_n}
 \end{equation}
-\begin{equation}
-  \label{eq:kf-stiffness}
-  S_t = 8 G^{*} \sqrt{R^{*} \delta_n}
-\end{equation}
 
 
 
 
-$\frac{1}{E^{*}} = \frac{1 -\nu_a^2}{E_a} + \frac{1 -\nu_b^2}{E_b}$
-$\frac{1}{G^{*}} = \frac{2 (2 - \nu_a) (1 + \nu_a)}{E_a} +  \frac{2 (2 - \nu_b) (1 + \nu_b)}{E_b}$
-$\beta = \frac{\ln{e}}{\ln{e}^2 + \pi}$
-$R^{*} = \frac{R_a R_b}{R_a + R_b}$
 
 
 
@@ -613,20 +617,40 @@ the contact time as
 \begin{equation}
   \label{eq:tangential-force}
   \ten{F}_{a}^{t^{n+1}} =
-  -k_f \Delta \textit{\textbf{l}}_a^{\,n + 1} =
-  -k_f \big[\big(\Delta {\textit{\textbf{l}}}_a^{\,n} \
+  -k_t \Delta \textit{\textbf{l}}_a^{\,n + 1} - \eta_t \ten{v}_t =
+  -k_t \big[\big(\Delta {\textit{\textbf{l}}}_a^{\,n} \
   + \ten{v}_{ab}^{n + 1} \Delta t\big) \cdot \ten{t}_a^{n + 1} \big] \
-  \ten{t}_a^{n + 1},
+  \ten{t}_a^{n + 1} - \eta_t \ten{v}_t,
 \end{equation}
-where $\Delta t$ is the time step, $\ten{v}_{ab} = \ten{v}_{a} - \ten{v}_b$ is the
-relative velocity of particle $a$ with respect to the contacting particle $b$,
-and $k_f$ is the tangential spring stiffness coefficient. The tangential
-spring stiffness is computed similar to the normal spring
-stiffness\cite{golshan2023lethe}.  The tangential unit vector is computed by,
+where $\Delta t$ is the time step,
+and $k_t$ is the tangential spring stiffness coefficient. The tangential unit
+vector is computed by,
 \begin{equation}
   \label{eq:tangential-vect}
   \ten{t}_a = \frac{\ten{v}_{ab} - (\ten{v}_{ab} \cdot \ten{n}) \ten{n}}{|\ten{v}_{ab} - (\ten{v}_{ab} \cdot \ten{n}) \ten{n}|}.
 \end{equation}
+The tangential spring stiffness ($k_t$) and the tangential damping coefficient
+$\eta_t$ are given as:
+\begin{equation}
+  \label{eq:kf-stiffness}
+  k_t = 8 \; G^{*} \; \sqrt{R^{*} \delta_n},
+\end{equation}
+\begin{equation}
+  \label{eq:kf-stiffness}
+  \eta_t = -2 \sqrt{\frac{5}{6}} \beta \; \sqrt{S_t m^*},
+\end{equation}
+with $G^*$ and $S_t$ are given as,
+\begin{equation}
+  \label{eq:kf-stiffness}
+  \frac{1}{G^{*}} = \frac{2 (2 - \nu_a) (1 + \nu_a)}{E_a} +  \frac{2 (2 - \nu_b) (1 + \nu_b)}{E_b},
+\end{equation}
+\begin{equation}
+  \label{eq:kf-stiffness}
+  S_t = 8 G^{*} \sqrt{R^{*} \delta_n},
+\end{equation}
+where, $G$ is the shear modulus of the particles, $\nu$ is the Poisson's ratio.
+
+
 
 The tangential force is coupled to the normal force through the Coulomb's law,
 \begin{equation}
@@ -671,27 +695,29 @@ particle $b$, given as
     \includegraphics[width=1.0\textwidth]{images/rfc_explantion_schematic/sph_sampled_spherical_particles}
     \subcaption{A rigid spherical particle sampled with dummy SPH particles}%\label{fig:rings:ipst-nu-0.47-1}
   \end{subfigure}
-  \caption{}
+  \caption{A rigid particle being discretized into several dummy SPH
+    particles, to handle the interaction with surrounding fluid.}
 \label{fig:real_particle_sph_sampling}
 \end{figure}
-To calculate the force exerted on the spherical particle by the surrounding
+To calculate the force exerted on the rigid particle due to the surrounding
 fluid, we employ a method involving the sampling of the spherical particle
 using dummy Smoothed Particle Hydrodynamics (SPH) particles, depicted in
 \cref{fig:real_particle_sph_sampling}. These SPH particles are evenly
 distributed and remain stationary, moving in tandem with the velocity of the
-rigid particle at any given location. To establish the pressure of these SPH
-particles, we utilize the fixed ghost particle boundary technique outlined in
-\cref{sec:boundary_conditions}.
+rigid particle at any given location.  They serve as SPH boundary particles
+and contribute to the computation of fluid particle density and acceleration
+according to \Cref{eq:sph-discretization-continuity,eq:sph-momentum-fluid}.
+To establish the pressure of these SPH particles, we utilize the fixed ghost
+particle boundary technique outlined in \cref{sec:boundary_conditions}.
 
 
-
-With spherical particles being discretized into SPH particles and immersed in
+With rigid particles being discretized into SPH particles and immersed in
 fluid can be seen in \cref{fig:many_rb_in_fluid_sph_particles}.
 \begin{figure}[!htpb]
   \centering
   \includegraphics[width=0.7\textwidth]{images/rfc_zoomed_combined}
   \caption{A rigid spherical particle sampled with dummy SPH particles being
-    immersed in a fluid tank. An SPH particle representation}
+    immersed in a fluid tank. An SPH particle representation.}
   \label{fig:many_rb_in_fluid_sph_particles}
 \end{figure}
 The force on the fluid particle due to the
@@ -702,7 +728,9 @@ SPH particle due to the interaction with the fluid is given by,
 \begin{equation}
   \label{eq:rfc-force}
   \ten{F}_{\text{rfc}}^a = -m_a \sum_{f} m_f \bigg(\frac{p_f}{\rho_{f}^2} +
-  \frac{p_a}{\rho_{a}^2}\bigg) \nabla_{a} W(x_{af}),
+  \frac{p_a}{\rho_{a}^2}\bigg) \nabla_{a} W(x_{af}) +
+  m_a \sum_{f} m_f \frac{4 \eta \nabla_a W_{af}\cdot
+    \ten{r}_{af}}{(\rho_a + \rho_f) (r_{af}^2 + 0.01 h_{af}^2)} \ten{u}_{af}
 \end{equation}
 where, $m_a$ signifies the hydrodynamic mass of the sampled dummy SPH particle,
 and $\rho_a$ represents its hydrodynamic density. While $m_f$, $p_f$ and
@@ -770,11 +798,10 @@ Initially, we validate our fluid solver through the resolution of the
 Poiseuille flow problem. Subsequently, we validate the Discrete Element Method
 (DEM) solver by simulating a normal head-on collision between two spherical
 particles and addressing a particle-wall impact scenario.  We validate the
-coupled SPH-DEM solver through simulations.  These simulations involved
-scenarios like a spherical particle entering a steady tank, a solid object
-falling in a water tank, and the behavior of a floating solid.  Lastly, we
+coupled SPH-DEM solver with simulations involved like a circular particle
+entering a steady tank, a cube settling in a water tank.  Lastly, we
 investigate the mixing behavior of spherical particles under a stirrer,
-examining cases with varying densities and diameters.
+examining cases with varying particle diameters and stirrer speeds.
 
 
 \FloatBarrier%
@@ -1040,155 +1067,192 @@ coupling problems efficiently.
 
 \FloatBarrier%
 \subsection{Mixing of spherical particles in a fluid tank}
-\label{sec:mixing-spherical-particles-in-fluid-tank}
-In this section we study the particle dispersion in a tank with varied stirrer
-velocities. Radius of each particle is taken as $0.05$ m, with total no of
-bodies of $54$.  The length and height of the fluid in the tank is taken as
-$3$ m and $1.5$ m. The stirrer height is $0.75$ m, which is immersed half into
-the fluid and placed in the left, and the length of the stirrer being $0.1$ m.
-We allow the particles to settle for $1$ second, and let the stirrer oscillate
-through out the fluid length with different stirrer speed and evaluate the
-mixing characteristics of the particles inside the fluid. The schematic of the
-figure is given in \Cref{fig:schematic-Dinesh-mixer}. The Young's modulus of
-the solid particles is taken as $10^{9}$ \todoin{units} and a Poisson's ration
-of $0.23$ and a density of $1050$ is considered.
+\label{sec:mixing-spherical-particles-in-fluid-tank-homogeneous}
 
+In this section, we investigate particle dispersion within a tank under
+various stirrer velocities. Each circular particle has a radius of $0.055$ m,
+with a total of $54$ particles. The fluid's dimensions in the tank are set to
+a length of $3.3$ m and a height of $1.65$ m. The stirrer, positioned on the left
+side, has a height of $0.75$ m, half of which is submerged into the fluid, and
+a length of $0.11$ m. After allowing the particles to settle for $1$ second,
+the stirrer oscillates throughout the fluid length. We examine three stirrer
+speeds: $1$, $3$ m\,s\textsuperscript{-1}.  The schematic of the figure is
+given in \Cref{fig:schematic-Dinesh-mixer-homogeneous}. The solid particles
+have a Young's modulus of $10^{9}$ N\,m\textsuperscript{-2}, a Poisson's ratio
+of $0.23$ and a density of $1050$ kg\,m\textsuperscript{-3} is considered.
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time1}
-  \caption{Schematic of a mixer}\label{fig:schematic-Dinesh-mixer}
+  \includegraphics[width=0.45\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time0}
+  \caption{ Initial configuration of particles in a fluid tank including the
+    stirrer.}
+  \label{fig:schematic-Dinesh-mixer-homogeneous}
 \end{figure}
 
+
+\Cref{fig:1-mixing-1,fig:1-mixing-2,fig:1-mixing-3}, illustrate the
+distribution of particles within a fluid tanker under the influence of a
+stirrer.  In \Cref{fig:1-mixing-1}, particles tend to aggregate and settle
+gradually into a clump at the center. Additionally, their motion aligns with
+the surrounding fluid motion. Conversely, \Cref{fig:1-mixing-2,fig:1-mixing-3}
+depict a scenario where the high speed of the stirrer causes fluid to
+circulate heavily at the tank's corners, resulting in particle
+settlement at the tank's corners without efficient mixing.
 \begin{figure}[!htpb]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-1-a}
+    \subcaption{t = $3$ s}\label{fig:1-mixing-1-a}
   \end{subfigure}
-  %
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-1-b}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time2}
+    \subcaption{t = $6$ s}\label{fig:1-mixing-1-b}
   \end{subfigure}
 
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-1-c}
+    \subcaption{t = $9.9$ s}\label{fig:1-mixing-1-c}
   \end{subfigure}
-%
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-1-d}
-  \end{subfigure}
-  \caption{}
+  % \begin{subfigure}{0.45\textwidth}
+  %   \centering
+  %   \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time0}
+  %   \subcaption{t = $7.38$ ms}\label{fig:1-mixing-1-d}
+  % \end{subfigure}
+  \caption{Snapshots of fluid, stirrer and the rigid circular particles at
+    three time steps, where the stirrer is oscillating at a velocity of $1$
+    m\,s\textsuperscript{-1}. The colour contour of the fluid particles
+    represents the velocity magnitude.}
 \label{fig:1-mixing-1}
 \end{figure}
-
-
-
 \begin{figure}[!htpb]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-2-a}
+    \subcaption{t = $3$ s}\label{fig:1-mixing-1-a}
   \end{subfigure}
-  %
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-2-b}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time2}
+    \subcaption{t = $6$ s}\label{fig:1-mixing-1-b}
   \end{subfigure}
 
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-2-c}
+    \subcaption{t = $9.9$ s}\label{fig:1-mixing-1-c}
   \end{subfigure}
-%
+  \caption{Snapshots of fluid, stirrer and the rigid circular particles at
+    three time steps, where the stirrer is oscillating at a velocity of $3$
+    m\,s\textsuperscript{-1}. The colour contour of the fluid particles
+    represents the velocity magnitude.}
+\label{fig:1-mixing-2}
+\end{figure}
+\begin{figure}[!htpb]
+  \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_2/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-2-d}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_3/time1}
+    \subcaption{t = $3$ s}\label{fig:1-mixing-1-a}
   \end{subfigure}
-  \caption{}
-\label{fig:1-mixing-2}
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_3/time2}
+    \subcaption{t = $6$ s}\label{fig:1-mixing-1-b}
+  \end{subfigure}
+
+  \begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_3/time3}
+    \subcaption{t = $9.9$ s}\label{fig:1-mixing-1-c}
+  \end{subfigure}
+  % \begin{subfigure}{0.45\textwidth}
+  %   \centering
+  %   \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_homogeneous_2d/case_1/time0}
+  %   \subcaption{t = $7.38$ ms}\label{fig:1-mixing-1-d}
+  % \end{subfigure}
+  \caption{Snapshots of fluid, stirrer and the rigid circular particles at
+    three time steps, where the stirrer is oscillating at a velocity of $5$
+    m\,s\textsuperscript{-1}. The colour contour of the fluid particles
+    represents the velocity magnitude.}
+\label{fig:1-mixing-3}
 \end{figure}
 
 
 \FloatBarrier%
 \subsection{Mixing of spherical particles of variable size in a fluid tank}
-\label{sec:mixing-spherical-particles-in-fluid-tank}
-
-
+\label{sec:mixing-spherical-particles-in-fluid-tank-inhomogeneous}
+In this section, similar to the case discussed in
+\Cref{sec:mixing-spherical-particles-in-fluid-tank-homogeneous}, we analyze circular
+particles with two different radii. These particles have a ratio of $1.2$
+between the larger and smaller particle, with the smaller particle having a
+radius of $0.11$ m. The schematic of the figure is provided in
+\Cref{fig:schematic-Dinesh-mixer-inhomogeneous}
 \begin{figure}[!htpb]
   \centering
-  \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time1}
-  \caption{Schematic of a mixer}\label{fig:schematic-Dinesh-mixer}
+  \includegraphics[width=0.45\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time0}
+  \caption{Schematic of mixer with two different radius in a fluid
+    tank.}\label{fig:schematic-Dinesh-mixer-inhomogeneous}
 \end{figure}
 
+\Cref{fig:2-mixing-1,fig:2-mixing-2} shows the distribution of particles in a
+fluid tank under the influence of a stirrer, with two stirrer speeds at three
+different time steps. Similar to
+\Cref{sec:mixing-spherical-particles-in-fluid-tank-homogeneous}, from
+\Cref{fig:2-mixing-1}, we see that with a lower stirrer speed, particles tend
+to aggregate and settle gradually into a clump at the center and at higher
+speeds due to the generated circulation near the tank corners, the particles
+settle at the corner and do not involve in the mixing, as can be seen from
+\Cref{fig:2-mixing-2}.
 \begin{figure}[!htpb]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-1-a}
+    \subcaption{t = $3$ s}\label{fig:1-mixing-1-b}
   \end{subfigure}
-  %
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-1-b}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time2}
+    \subcaption{t = $6$ s}\label{fig:1-mixing-1-c}
   \end{subfigure}
 
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-1-c}
+    \subcaption{t = $9.9$ s}\label{fig:1-mixing-1-d}
   \end{subfigure}
-%
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_1/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-1-d}
-  \end{subfigure}
-  \caption{}
-\label{fig:1-mixing-1}
+  \caption{Snapshots of fluid, stirrer and the rigid circular particles at
+    three time steps, where the stirrer is oscillating at a velocity of $1$
+    m\,s\textsuperscript{-1}. The colour contour of the fluid particles
+    represents the velocity magnitude.}
+\label{fig:2-mixing-1}
 \end{figure}
-
-
-
 \begin{figure}[!htpb]
   \centering
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time1}
-    \subcaption{t = $0$ ms}\label{fig:1-mixing-2-a}
+    \subcaption{t = $3$ s}\label{fig:1-mixing-1-b}
   \end{subfigure}
-  %
   \begin{subfigure}{0.48\textwidth}
     \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time1}
-    \subcaption{t = $1.38$ ms}\label{fig:1-mixing-2-b}
+    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time2}
+    \subcaption{t = $6$ s}\label{fig:1-mixing-1-c}
   \end{subfigure}
 
   \begin{subfigure}{0.48\textwidth}
     \centering
     \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time3}
-    \subcaption{t = $5.17$ ms}\label{fig:1-mixing-2-c}
+    \subcaption{t = $9.9$ s}\label{fig:1-mixing-1-d}
   \end{subfigure}
-%
-  \begin{subfigure}{0.48\textwidth}
-    \centering
-    \includegraphics[width=1.0\textwidth]{figures/dinesh_2024_mixing_with_stirrer_inhomogeneous_2d/case_2/time0}
-    \subcaption{t = $7.38$ ms}\label{fig:1-mixing-2-d}
-  \end{subfigure}
-  \caption{}
-\label{fig:1-mixing-2}
+  \caption{Snapshots of fluid, stirrer and the rigid circular particles at
+    three time steps, where the stirrer is oscillating at a velocity of $3$
+    m\,s\textsuperscript{-1}. The colour contour of the fluid particles
+    represents the velocity magnitude.}
+\label{fig:2-mixing-2}
 \end{figure}
 
 % \FloatBarrier%
@@ -1203,14 +1267,34 @@ of $0.23$ and a density of $1050$ is considered.
 \FloatBarrier%
 \section{Conclusions}
 \label{sec:conclusions}
+In this study, mixing efficiency in a two-dimensional tank is examined using a
+similar stirrer type, employing a fully resolved SPH-DEM solver. The fluid
+phase is represented using a weakly compressible SPH formulation, while the
+interaction and dynamics of spherical particles are modeled using the Discrete
+Element Method (DEM). The interaction between the fluid and discrete particles
+is managed by associating the spherical particles with surrogate SPH
+particles. The coupled SPH-DEM solver is developed within the PySPH software
+framework \cite{ramachandran2021pysph}. Validation of the weakly compressible
+SPH method is performed using the Poiseuille flow problem, while the DEM
+solver is validated against particle-level benchmarks including head-on
+collisions between two spherical particles and particle-wall collisions. The
+validation of the coupled solver includes scenarios such as a circular
+particle entering a tank and a cube settling in a three-dimensional tank.  The
+influence of stirrer speed on particle dispersion in a 2D tank was thoroughly
+investigated. Different stirrer speeds were examined, revealing distinct
+behaviors. At lower stirrer speeds, particles tended to aggregate and remain
+in center within the tank, influenced due to the surrounding fluid
+velocity. While, higher stirrer speeds generated fluid circulation, causing
+some particles to settle at the tank corners, thus hindering their
+participation in mixing. The same behaviour was found even in scenarios involving
+particles with varying radii.
 
 
-
-
-Influence of the cohesion among the particles on the mixing behaviour among
-the particles can be studied as a furture work. Mixing behaviour with
-different densities and different radius in place can be studied.
-
+Due to the current solver's capability in handling the free surfaces, we can
+extend the current to study the particle dispersion in a 3D cylindrical tank
+featuring an impeller. Further, we can explore how the speed and placement of
+the impeller affect mixing efficiency. Additionally, influence of particle
+cohesion on the inter-particle mixing behavior can be examined.
 
 % \section*{References}
 

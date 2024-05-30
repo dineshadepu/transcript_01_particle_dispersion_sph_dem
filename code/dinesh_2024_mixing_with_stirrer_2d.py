@@ -114,7 +114,7 @@ class Problem(Application):
                            help="Diameter of each particle")
 
         group.add_argument("--stirrer-velocity", action="store", type=float,
-                           dest="stirrer_velocity", default=1,
+                           dest="stirrer_velocity", default=0.319,
                            help="Stirrer velocity")
 
         group.add_argument("--radius-ratio", action="store", type=float,
@@ -249,15 +249,23 @@ class Problem(Application):
         xf, yf, xt, yt = hydrostatic_tank_2d(self.fluid_length, self.fluid_height,
                                              self.tank_height, self.tank_layers,
                                              self.dx, self.dx, False)
-
-        zt = np.zeros_like(xt)
         zf = np.zeros_like(xf)
-
         # move fluid such that the left corner is at the origin of the
         # co-ordinate system
         translation = translate_system_with_left_corner_as_origin(xf, yf, zf)
         xt[:] = xt[:] - translation[0]
         yt[:] = yt[:] - translation[1]
+
+        xt_1, yt_1 = get_2d_block(dx=self.dx,
+                                  length=self.fluid_length,
+                                  height=self.stirrer_length)
+        xt_1 += min(xf) - min(xt_1)
+        yt_1 += max(yt) - max(yt_1)
+        xt = np.concatenate([xt, xt_1])
+        yt = np.concatenate([yt, yt_1])
+
+        zt = np.zeros_like(xt)
+
         zt[:] = zt[:] - translation[2]
 
         # xf, yf, zf = np.array([0.02]), np.array([self.fluid_height]), np.array([0.])
@@ -634,7 +642,7 @@ class Problem(Application):
             axs.scatter(stirrer.x, stirrer.y, s=s, c="k")
             axs.scatter(rigid_body.x, rigid_body.y, s=s, c="r")
             tmp = axs.scatter(fluid.x, fluid.y, s=s, c=vmag, vmin=c_min,
-                              vmax=c_max, cmap="jet")
+                              vmax=c_max, cmap="jet", rasterized=True)
             # tmp = axs.scatter(fluid.x, fluid.y, s=s, c=fluid.p, vmin=c_min,
             #                   vmax=c_max, cmap="hot")
 
@@ -653,7 +661,7 @@ class Problem(Application):
 
             # save the figure
             figname = os.path.join(os.path.dirname(fname), "time" + str(i) + ".pdf")
-            fig.savefig(figname, dpi=300)
+            fig.savefig(figname, dpi=300, bbox_inches='tight', pad_inches=0.05)
 
 
 if __name__ == '__main__':

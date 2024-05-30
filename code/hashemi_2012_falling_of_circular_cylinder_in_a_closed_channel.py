@@ -576,7 +576,7 @@ class Problem(Application):
             # v.append(rigid_body.vcm[1])
                 y.append(rigid_body.y[0])
                 v.append(rigid_body.v[0])
-                t.append(_t)
+                t.append(_t - self.wall_time)
 
                 force_p_magn.append(np.sum(rb_slave.fx_p[:]**2. + rb_slave.fy_p[:]**2. + rb_slave.fz_p[:]**2.)**0.5)
                 force_v_magn.append(np.sum(rb_slave.fx_v[:]**2. + rb_slave.fy_v[:]**2. + rb_slave.fz_v[:]**2.)**0.5)

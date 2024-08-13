@@ -512,8 +512,8 @@ class Wu2014FallingSolid3D(Problem):
 
             plt.plot(t_current, z_current, label=self.case_info[name][1])
 
-        plt.xlabel('time')
-        plt.ylabel('z - amplitude')
+        plt.xlabel('time (seconds)')
+        plt.ylabel('z - amplitude (m)')
         plt.legend()
         # plt.tight_layout(pad=0)
         plt.savefig(self.output_path('z_vs_t.pdf'))
@@ -611,7 +611,6 @@ class Zhang2009SolidFluidMixtureVerification2d(Problem):
             file_names = os.listdir(source)
 
             for file_name in file_names:
-                # print(file_name)
                 if file_name.endswith((".jpg", ".pdf", ".png")):
                     # print(target_dir)
                     shutil.copy(os.path.join(source, file_name), target_dir)
@@ -677,7 +676,7 @@ class Dinesh2024MixingWithStirrerHomogeneous2d(Problem):
 
             for file_name in file_names:
                 # print(file_name)
-                if file_name.endswith((".jpg", ".pdf", ".png")):
+                if file_name.endswith((".jpg", ".pdf", ".png", ".mp4")):
                     # print(target_dir)
                     shutil.copy(os.path.join(source, file_name), target_dir)
 
@@ -745,7 +744,7 @@ class Dinesh2024MixingWithStirrerInHomogeneous2d(Problem):
 
             for file_name in file_names:
                 # print(file_name)
-                if file_name.endswith((".jpg", ".pdf", ".png")):
+                if file_name.endswith((".jpg", ".pdf", ".png", ".mp4")):
                     # print(target_dir)
                     shutil.copy(os.path.join(source, file_name), target_dir)
 

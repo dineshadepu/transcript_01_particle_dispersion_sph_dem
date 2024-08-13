@@ -24,9 +24,9 @@
      inkscape:pagecheckerboard="0"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="0.11313708"
-     inkscape:cx="16678.881"
-     inkscape:cy="-1613.0873"
+     inkscape:zoom="0.69561844"
+     inkscape:cx="-221.38573"
+     inkscape:cy="2647.2846"
      inkscape:window-width="1920"
      inkscape:window-height="978"
      inkscape:window-x="0"
@@ -574,7 +574,7 @@
        height="204.11244"
        x="687.68732"
        y="-23.869186"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"
        transform="rotate(90)" />
@@ -585,7 +585,7 @@
        height="203.56689"
        x="700.27081"
        y="-23.604185"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"
        transform="rotate(90)" />
@@ -596,7 +596,7 @@
        height="204.55319"
        x="777.61804"
        y="-23.878134"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"
        transform="rotate(90)" />
@@ -604,7 +604,7 @@
        style="fill:none;stroke:#000000;stroke-width:1;marker-end:url(#Arrow1Lend)"
        d="m -263.02878,739.54676 c 65.38038,0 65.38038,0 65.38038,0"
        id="path1063"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300" />
     <text
@@ -613,7 +613,7 @@
        x="-263.86954"
        y="727.0791"
        id="text1067"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
@@ -627,7 +627,7 @@
        x="-94.583168"
        y="681.10193"
        id="text3495"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
@@ -641,7 +641,7 @@
        x="-92.980263"
        y="806.04974"
        id="text4407"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
@@ -651,47 +651,48 @@
          y="806.04974">u = 0</tspan></text>
     <g
        id="g1287"
-       transform="translate(58.911913,50.5064)"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       transform="translate(58.304876,88.989972)"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
-       inkscape:export-ydpi="300">
+       inkscape:export-ydpi="300"
+       style="fill:#00ffff;stroke:#00ffff">
       <path
-         style="fill:#ff0000;stroke:#ff0000;stroke-width:0.437;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+         style="fill:#00ffff;stroke:#00ffff;stroke-width:0.437;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
          d="m -238.97994,688.62807 c 32.23779,0 32.23779,0 32.23779,0"
          id="path1131" />
       <path
-         style="fill:#ff0000;stroke:#ff0000;stroke-width:0.437;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+         style="fill:#00ffff;stroke:#00ffff;stroke-width:0.437;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
          d="m -238.97994,688.62807 c 1e-5,-32.2378 1e-5,-32.2378 1e-5,-32.2378"
          id="path1279" />
     </g>
     <text
        xml:space="preserve"
-       style="font-size:9.09911px;fill:#ff0000;stroke:#ff0000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
-       x="-160.37282"
-       y="735.8288"
+       style="font-size:9.09911px;fill:#00ffff;stroke:#00ffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+       x="-160.97986"
+       y="774.31238"
        id="text2237"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan2235"
-         style="stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
-         x="-160.37282"
-         y="735.8288">x</tspan></text>
+         style="stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;fill:#00ffff;stroke:#00ffff"
+         x="-160.97986"
+         y="774.31238">x</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:8.17739px;fill:#ff0000;stroke:#ff0000;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
-       x="-175.68654"
-       y="708.72424"
+       style="font-size:8.17739px;fill:#00ffff;stroke:#00ffff;stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
+       x="-176.29358"
+       y="747.20782"
        id="text3231"
-       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/poiseuille_schematic.png"
+       inkscape:export-filename="/home/adepudinesh/post_doc/papers/transcript_01_particle_dispersion_sph_dem/manuscript/images/fluid_01_benchmark_poisuelle/poiseuille_schematic.png"
        inkscape:export-xdpi="300"
        inkscape:export-ydpi="300"><tspan
          sodipodi:role="line"
          id="tspan3229"
-         style="stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none"
-         x="-175.68654"
-         y="708.72424">y</tspan></text>
+         style="stroke-width:0.2;stroke-miterlimit:4;stroke-dasharray:none;fill:#00ffff;stroke:#00ffff"
+         x="-176.29358"
+         y="747.20782">y</tspan></text>
     <circle
        style="fill:none;stroke:#000080;stroke-width:1.60991;stroke-miterlimit:4;stroke-dasharray:none"
        id="circle994"

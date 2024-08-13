@@ -628,6 +628,7 @@ class Problem(Application):
             tank = data['arrays']['tank']
             stirrer = data['arrays']['stirrer']
             rigid_body = data['arrays']['rigid_body_combined_slave']
+            rigid_body_master = data['arrays']['rigid_body_combined_master']
 
             c_min = min((fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5)
             c_max = max((fluid.u[:]**2. + fluid.v[:]**2. + fluid.w[:]**2.)**0.5)
@@ -641,25 +642,75 @@ class Problem(Application):
             axs.scatter(tank.x, tank.y, s=s, c="k")
             axs.scatter(stirrer.x, stirrer.y, s=s, c="k")
             axs.scatter(rigid_body.x, rigid_body.y, s=s, c="r")
-            tmp = axs.scatter(fluid.x, fluid.y, s=s, c=vmag, vmin=c_min,
-                              vmax=c_max, cmap="jet", rasterized=True)
+            # # =====================================================
+            # # Color the rigid body particles based on the radius
+            # # =====================================================
+            # if len(rigid_body.x) < 1804:
+            #     axs.scatter(rigid_body.x, rigid_body.y, s=s, c="r")
+            # else:
+            #     self.dx = 0.11 / 6
+            #     x1, y1 = create_circle_1(0.11, self.dx)
+            #     small_radius_indices = np.array([])
+            #     for k in range(27):
+            #         small_radius_indices = np.concatenate([small_radius_indices, np.zeros_like(x1)])
+
+            #     x1, y1 = create_circle_1(1.2 * 0.11, self.dx)
+            #     big_radius_indices = np.array([])
+            #     for k in range(27):
+            #         big_radius_indices = np.concatenate([big_radius_indices, np.ones_like(x1)])
+            #     all_indices = np.concatenate([small_radius_indices, big_radius_indices])
+            #     small_indices = np.where(all_indices==0.)[0]
+            #     axs.scatter(rigid_body.x[small_indices], rigid_body.y[small_indices], s=s, color="red")
+
+            #     big_indices = np.where(all_indices==1.)[0]
+            #     axs.scatter(rigid_body.x[big_indices], rigid_body.y[big_indices], s=s, color="black")
+
+
+            # # print(all_indices)
+
+            # # get the body ids which have same radius
+
+
+            # # max_body_id = max(rigid_body.body_id)
+            # # min_body_id = min(rigid_body.body_id)
+            # # print("maximum bid is ", max_body_id)
+            # # print("minim bid is ", min_body_id)
+            # # max_body_id_indices = np.where(rigid_body.body_id==max_body_id)[0]
+            # # min_body_id_indices = np.where(rigid_body.body_id==min_body_id)[0]
+            # # print(max_body_id_indices)
+            # # print(min_body_id_indices)
+            # # print(len(max_body_id_indices))
+            # # print(len(min_body_id_indices))
+            # # if (len(max_body_id_indices) == len(min_body_id_indices)):
+            # #     axs.scatter(rigid_body.x, rigid_body.y, s=s, c="r")
+            # # =====================================================
+            # # Color the rigid body particles based on the radius
+            # # =====================================================
+            if i!=0:
+                tmp = axs.scatter(fluid.x, fluid.y, s=s, c=vmag, vmin=c_min,
+                                  vmax=c_max, cmap="jet", rasterized=True)
+            else:
+                axs.scatter(fluid.x, fluid.y, s=s, c=vmag, vmin=c_min,
+                            vmax=c_max, cmap="jet", rasterized=True)
             # tmp = axs.scatter(fluid.x, fluid.y, s=s, c=fluid.p, vmin=c_min,
             #                   vmax=c_max, cmap="hot")
 
-            axs.set_xlabel('x')
-            axs.set_ylabel('y')
+            axs.set_xlabel('x (m)')
+            axs.set_ylabel('y (m)')
             # axs.set_xlim([x_min, x_max])
             # axs.set_ylim([y_min, y_max])
             # axs.grid()
             axs.set_aspect('equal', 'box')
 
-            divider = make_axes_locatable(axs)
-            cax = divider.append_axes('right', size='3%', pad=0.1)
-            fig.colorbar(tmp, cax=cax, format='%.0e', orientation='vertical',
-                         shrink=0.3)
-            cax.set_ylabel('Velocity magnitude')  # cax == cb.ax
+            if i != 0:
+                divider = make_axes_locatable(axs)
+                cax = divider.append_axes('right', size='3%', pad=0.1)
+                fig.colorbar(tmp, cax=cax, format='%.0e', orientation='vertical',
+                            shrink=0.3)
+                cax.set_ylabel('Velocity magnitude (m/s)')  # cax == cb.ax
 
             # save the figure
+            print(str(i), "string printable")
             figname = os.path.join(os.path.dirname(fname), "time" + str(i) + ".pdf")
             fig.savefig(figname, dpi=300, bbox_inches='tight', pad_inches=0.05)
 
